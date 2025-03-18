@@ -2,18 +2,14 @@
 ============================================================
   Fichero: array.h
   Creado: 16-03-2025
-  Ultima Modificacion: diumenge, 16 de març de 2025, 13:22:00
+  Ultima Modificacion: dimarts, 18 de març de 2025, 11:13:44
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
 
-#include <stdio.h>
+#include "bandera.h"
 
 #define ARRSIZE 256
-
-typedef enum {false,true} bool;
-
-typedef unsigned char u1;
 
 typedef struct {
 	u1 size;

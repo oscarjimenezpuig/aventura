@@ -2,7 +2,7 @@
 ============================================================
   Fichero: array.c
   Creado: 16-03-2025
-  Ultima Modificacion: diumenge, 16 de març de 2025, 12:47:47
+  Ultima Modificacion: dimarts, 18 de març de 2025, 14:33:38
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -57,19 +57,6 @@ void arrprt(Array a) {
 		printf("%i ",a.data[k]);
 	}
 	printf("} #%i\n",a.size);
-}
-
-/* prueba */
-
-int main() {
-	Array a=arrnew();
-	for(u1 k=0;k<5;k++) arrpsh(&a,k+1);
-	arrprt(a);
-	u1 p;
-	arrfnd(a,4,&p);
-	arrera(&a,p);
-	arrprt(a);
-	return 0;
 }
 
 

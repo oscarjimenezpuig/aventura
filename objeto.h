@@ -2,7 +2,7 @@
 ============================================================
   Fichero: objeto.h
   Creado: 16-03-2025
-  Ultima Modificacion: diumenge, 16 de març de 2025, 13:24:34
+  Ultima Modificacion: dimarts, 18 de març de 2025, 12:27:39
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -11,6 +11,7 @@
 
 #define NIL 0
 #define LOCALIDAD 1
+#define PSI 2
 
 #define NORTE 0
 #define OESTE 1
@@ -32,6 +33,10 @@ typedef struct {
 		struct { //localidad
 			u1 salida[SALIDAS];
 		};
+		struct { //psi
+			u1 ataque,destreza,capacidad;
+			bool jugador,muerto;
+		};
 	};
 } Objeto;
 
@@ -43,8 +48,17 @@ Objeto* objnew(u1 id,u1 tipo,char* nombre);
 Objeto* objget(u1 id);
 //consigue el obejeto con identificador dado
 
+bool objins(u1 receptor,u1 objeto);
+//inserta un objeto en otro (siempre y cuando el objeto no este contenido en ningun sitio)
+
+bool objexp(u1 objeto);
+//quita el objeto de un contenedor
+
 Array objsel(Condicion condicion);
 //un array de idientificadores de los objetos que cumplen una determinada condicion
+
+void objprt(u1 id);
+//imprime un objeto segun el tipo que sea
 
 
 
