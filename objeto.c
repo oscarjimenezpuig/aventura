@@ -2,7 +2,7 @@
 ============================================================
   Fichero: objeto.c
   Creado: 16-03-2025
-  Ultima Modificacion: dimarts, 18 de març de 2025, 12:28:55
+  Ultima Modificacion: dimecres, 19 de març de 2025, 14:07:18
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -14,19 +14,23 @@
 static Objeto objetos[OBJETOS];
 
 static void obsini() {
-	Objeto* ptr=objetos;
-	while(ptr!=objetos+OBJETOS) {
-		ptr->tipo=NIL;
-		ptr++;
+	static bool init=false;
+	if(!init) {
+		Objeto* ptr=objetos;
+		while(ptr!=objetos+OBJETOS) {
+			ptr->tipo=NIL;
+			ptr++;
+		}
+		init=true;
 	}
 }
 
 Objeto* objnew(u1 i,u1 t,char* n) {
-	static bool init=false;
+	obsini();
 	Objeto* o=NULL;
 	if(t!=NIL && i>0) {
-		if(!init && (init=true)) obsini();
 		o=objetos+i;
+		o->id=i;
 		o->tipo=t;
 		o->nombre=n;
 		o->descripcion=NULL;
@@ -37,8 +41,6 @@ Objeto* objnew(u1 i,u1 t,char* n) {
 }
 
 Objeto* objget(u1 i) {
-	static bool init=false;
-	if(!init && (init=true)) obsini();
 	Objeto* o=objetos+i;
 	return (i==0 || o->tipo==NIL)?NULL:o;
 }
@@ -118,5 +120,4 @@ void objprt(u1 id) {
 	}
 }
 
-	
-	
+

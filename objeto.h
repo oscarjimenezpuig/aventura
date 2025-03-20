@@ -2,7 +2,7 @@
 ============================================================
   Fichero: objeto.h
   Creado: 16-03-2025
-  Ultima Modificacion: dimarts, 18 de març de 2025, 12:27:39
+  Ultima Modificacion: dijous, 20 de març de 2025, 09:18:38
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -35,7 +35,7 @@ typedef struct {
 		};
 		struct { //psi
 			u1 ataque,destreza,capacidad;
-			bool jugador,muerto;
+			bool jugador,muerto,amigo;
 		};
 	};
 } Objeto;

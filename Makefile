@@ -82,6 +82,6 @@ check:
 #MAKEFILE VARIABLE
 
 NAME = aventura 
-SCRS = inout.c bandera.c array.c objeto.c mapa.c acciones.c
+SCRS = inout.c bandera.c array.c objeto.c mapa.c acciones.c psi.c jugador.c juego.c
 INCLUDES = 
 

@@ -2,7 +2,7 @@
 ============================================================
   Fichero: inout.c
   Creado: 17-03-2025
-  Ultima Modificacion: dilluns, 17 de març de 2025, 11:17:23
+  Ultima Modificacion: dijous, 20 de març de 2025, 11:12:42
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -53,5 +53,22 @@ bool cadequ(char* a,char* b) {
 	}
 	return (*ptrb=='\0')?true:false;
 }
+
+bool cadsep(Cadena d,char** f,char s) {
+	char* ptrd=d;
+	char* ptrf=*f;
+	while(*ptrf!=s && *ptrf!='\0') {
+		*ptrd++=*ptrf++;
+	}
+	*ptrd='\0';
+	if(*ptrf==s) ptrf++;
+	*f=ptrf;
+	if(*d=='\0') {
+		if(*ptrf=='\0') return false;
+		else return cadsep(d,f,s);
+	} else return true;
+}
+
+	
 
 

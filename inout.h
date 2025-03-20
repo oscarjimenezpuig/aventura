@@ -2,7 +2,7 @@
 ============================================================
   Fichero: inout.h
   Creado: 17-03-2025
-  Ultima Modificacion: dilluns, 17 de març de 2025, 11:05:19
+  Ultima Modificacion: dijous, 20 de març de 2025, 11:12:11
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-#define CADLEN 20
+#define CADLEN 100
 #define TABSIZ 4
 
 typedef unsigned char u1;
@@ -34,6 +34,9 @@ void cadcpy(Cadena d,char* o);
 
 bool cadequ(char* a,char* b);
 /* mira si dos cadenas son iguales */
+
+bool cadsep(Cadena d,char** f,char separador);
+/* separa f y obtiene la primera palabra diferente al vacio, responde true si encuentra palabra*/
 
 
 
