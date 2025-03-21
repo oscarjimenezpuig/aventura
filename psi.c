@@ -2,7 +2,7 @@
 ============================================================
   Fichero: psi.c
   Creado: 18-03-2025
-  Ultima Modificacion: dijous, 20 de març de 2025, 09:18:38
+  Ultima Modificacion: divendres, 21 de març de 2025, 12:12:38
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -15,7 +15,7 @@ bool psinew(u1 i,char* n,char* d,bool j,bool f,u1 a,u1 s,u1 c) {
 	if(!j || (j && idjugador==0)) {
 		Objeto* opsi=objnew(i,PSI,n);
 		if(opsi) {
-			opsi->descripcion=d;
+			cadcpy(opsi->descripcion,d);
 			opsi->ataque=a;
 			opsi->destreza=s;
 			opsi->capacidad=c;

@@ -2,7 +2,7 @@
 ============================================================
   Fichero: jugador.h
   Creado: 19-03-2025
-  Ultima Modificacion: dimecres, 19 de març de 2025, 14:05:18
+  Ultima Modificacion: divendres, 21 de març de 2025, 11:38:54
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */

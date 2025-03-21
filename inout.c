@@ -2,7 +2,7 @@
 ============================================================
   Fichero: inout.c
   Creado: 17-03-2025
-  Ultima Modificacion: dijous, 20 de març de 2025, 11:12:42
+  Ultima Modificacion: divendres, 21 de març de 2025, 11:44:04
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -32,6 +32,12 @@ void outnl(u1 ls) {
 
 void outtb(u1 ts) {
 	for(u1 k=0;k<ts;k++) for(u1 t=0;t<TABSIZ;t++) printf(" ");
+}
+
+void outat(Atributo a) {
+	Cadena c;
+	sprintf(c,"\033[%im",a);
+	printf(c);
 }
 
 void cadcpy(Cadena d,char* o) {

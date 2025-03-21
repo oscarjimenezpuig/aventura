@@ -2,7 +2,7 @@
 ============================================================
   Fichero: mapa.c
   Creado: 16-03-2025
-  Ultima Modificacion: diumenge, 16 de març de 2025, 13:24:34
+  Ultima Modificacion: divendres, 21 de març de 2025, 12:12:14
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -12,7 +12,7 @@
 bool locnew(u1 i,char* n,char* d) {
 	Objeto* o=objnew(i,LOCALIDAD,n);
 	if(o) {
-		o->descripcion=d;
+		cadcpy(o->descripcion,d);
 		for(u1 k=0;k<SALIDAS;k++) o->salida[k]=0;
 	}
 	return (o==NULL)?false:true;

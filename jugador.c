@@ -2,7 +2,7 @@
 ============================================================
   Fichero: jugador.c
   Creado: 19-03-2025
-  Ultima Modificacion: dijous, 20 de març de 2025, 11:31:19
+  Ultima Modificacion: divendres, 21 de març de 2025, 12:24:34
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -21,7 +21,7 @@ static void reppoint(u1* p) {
 	char* car[]={"ATAQUE","DESTREZA","CAPACIDAD"};
 inicio:
 	u1 pun=TPI;
-	for(u1 k=0;k<4 && pun>0;k++) {
+	for(u1 k=0;k<3 && pun>0;k++) {
 		bool ok=false;
 		do {
 			out("Puntos disponibles: %i. Puntos dedicados a %s? ",pun,car[k]);
@@ -36,7 +36,7 @@ inicio:
 			}
 		} while(!ok);
 	}
-	out("En resumen: AT:%i HB:%i CP:%i",car[0],car[1],car[2]);
+	out("En resumen: AT:%i HB:%i CP:%i",p[0],p[1],p[2]);
 	outnl(1);
 	out("Estas de acuerdo? ");
 	Cadena r;
@@ -48,11 +48,11 @@ bool jugnew(u1 id) {
 	out("Como te llamas? ");
 	Cadena s;
 	in(s);
-	out("Hola %s, vamos a definir tus caracteristicas...");
+	out("Hola %s, vamos a definir tus caracteristicas...",s);
 	outnl(1);
 	u1 pun[]={0,0,0};
 	reppoint(pun);
-	if(psinew(id,s,NULL,true,true,pun[0],pun[1],pun[2])) {
+	if(psinew(id,s,"",true,true,pun[0],pun[1],pun[2])) {
 		ojug=objget(id);
 		idjug=id;
 	}
@@ -100,10 +100,10 @@ bool jugact() {
 					ok=actsep(tok);
 				} else {
 					out("No entiendo...");
-					outnl(1);
 				}
 			}
 		}
 	}
+	outnl(1);
 	return ok;	
 }

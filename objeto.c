@@ -2,7 +2,7 @@
 ============================================================
   Fichero: objeto.c
   Creado: 16-03-2025
-  Ultima Modificacion: dimecres, 19 de març de 2025, 14:07:18
+  Ultima Modificacion: divendres, 21 de març de 2025, 12:23:02
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -32,8 +32,7 @@ Objeto* objnew(u1 i,u1 t,char* n) {
 		o=objetos+i;
 		o->id=i;
 		o->tipo=t;
-		o->nombre=n;
-		o->descripcion=NULL;
+		cadcpy(o->nombre,n);
 		o->contenedor=0;
 		o->contenido=arrnew();
 	}
@@ -84,6 +83,7 @@ Array objsel(Condicion c) {
 static void locprt(Objeto* o) {
 	char* NOMSAL[]={"NORTE","OESTE","ABAJO","ARRIBA","ESTE","SUR"};
 	out(o->descripcion);
+	outnl(1);
 	out("Salidas visibles: ");
 	u1 hs=0;
 	for(u1 s=0;s<SALIDAS;s++) {
@@ -93,11 +93,14 @@ static void locprt(Objeto* o) {
 		out("No hay");
 	}
 	outnl(1);
-	if(o->contenido.size>0) {
+	if(o->contenido.size>1) {
 		out("Aqui puedes ver: ");
+		outnl(1);
 		for(u1 k=0;k<o->contenido.size;k++) {
 			outtb(1);
-			out("-%s",o->nombre);
+			Objeto* oc=objget(o->contenido.data[k]);
+			if(oc->tipo==PSI && oc->jugador) continue;
+			out("-%s",oc->nombre);
 			outnl(1);
 		}
 	}

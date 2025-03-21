@@ -2,7 +2,7 @@
 ============================================================
   Fichero: objeto.h
   Creado: 16-03-2025
-  Ultima Modificacion: dijous, 20 de març de 2025, 09:18:38
+  Ultima Modificacion: divendres, 21 de març de 2025, 12:11:02
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -25,8 +25,8 @@
 typedef struct {
 	u1 id;
 	u1 tipo;
-	char* nombre;
-	char* descripcion;
+	Cadena nombre;
+	Cadena descripcion;
 	u1 contenedor;
 	Array contenido;
 	union {
