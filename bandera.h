@@ -2,12 +2,12 @@
 ============================================================
   Fichero: bandera.h
   Creado: 18-03-2025
-  Ultima Modificacion: dimarts, 18 de març de 2025, 11:13:44
+  Ultima Modificacion: dissabte, 22 de març de 2025, 20:54:10
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
 
-#include "inout.h"
+#include "master.h"
 
 void flgon(u1 flag);
 //cpmecta bandera

@@ -2,7 +2,7 @@
 ============================================================
   Fichero: inout.h
   Creado: 17-03-2025
-  Ultima Modificacion: divendres, 21 de març de 2025, 11:43:45
+  Ultima Modificacion: dissabte, 22 de març de 2025, 21:50:59
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -43,6 +43,8 @@ bool cadequ(char* a,char* b);
 bool cadsep(Cadena d,char** f,char separador);
 /* separa f y obtiene la primera palabra diferente al vacio, responde true si encuentra palabra*/
 
+bool cadlow(Cadena c);
+/* cadena a minusculas */
 
 
 

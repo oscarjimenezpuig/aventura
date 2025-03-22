@@ -2,7 +2,7 @@
 ============================================================
   Fichero: jugador.c
   Creado: 19-03-2025
-  Ultima Modificacion: divendres, 21 de març de 2025, 12:24:34
+  Ultima Modificacion: dissabte, 22 de març de 2025, 21:00:43
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -77,6 +77,9 @@ static bool actsep(Token tok) {
 		case AARRIBA:
 		case AABAJO:
 			return psimov(idjug,tok.orden);
+		case AFINALIZAR:
+			finset(0);
+			return true;
 		default:
 			return false;
 	}
@@ -102,8 +105,8 @@ bool jugact() {
 					out("No entiendo...");
 				}
 			}
+			outnl(1);
 		}
 	}
-	outnl(1);
 	return ok;	
 }

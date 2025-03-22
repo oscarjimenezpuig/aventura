@@ -2,12 +2,12 @@
 ============================================================
   Fichero: juego.h
   Creado: 20-03-2025
-  Ultima Modificacion: divendres, 21 de març de 2025, 12:05:21
+  Ultima Modificacion: dissabte, 22 de març de 2025, 20:55:34
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
 
-#include "master.h"
+#include "jugador.h"
 
 #define JUGID 100 //identidad del jugador
 

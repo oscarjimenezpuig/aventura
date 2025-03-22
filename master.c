@@ -2,12 +2,12 @@
 ============================================================
   Fichero: master.c
   Creado: 21-03-2025
-  Ultima Modificacion: divendres, 21 de març de 2025, 12:31:55
+  Ultima Modificacion: dissabte, 22 de març de 2025, 20:54:48
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
 
-#include "master.h"
+#include "jugador.h"
 
 static int turno=1;
 static u1 finval=0;

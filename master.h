@@ -2,12 +2,12 @@
 ============================================================
   Fichero: master.h
   Creado: 21-03-2025
-  Ultima Modificacion: divendres, 21 de març de 2025, 12:31:55
+  Ultima Modificacion: dissabte, 22 de març de 2025, 20:53:47
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
 
-#include "jugador.h"
+#include "inout.h"
 
 #define TERMW 80 //numero de columnas de la terminal
 

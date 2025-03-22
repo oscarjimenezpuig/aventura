@@ -2,7 +2,7 @@
 ============================================================
   Fichero: acciones.h
   Creado: 17-03-2025
-  Ultima Modificacion: dilluns, 17 de març de 2025, 11:16:36
+  Ultima Modificacion: dissabte, 22 de març de 2025, 20:57:33
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -26,8 +26,9 @@
 #define AATACAR 12
 #define AHUIR 13
 #define ADESCANSAR 14
+#define AFINALIZAR 15
 
-#define ACCIONES ADESCANSAR+1
+#define ACCIONES AFINALIZAR+1
 
 u1 accfnd(char* cadena);
 /* busca una accion del deposito de acciones */

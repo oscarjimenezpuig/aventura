@@ -2,7 +2,7 @@
 ============================================================
   Fichero: inout.c
   Creado: 17-03-2025
-  Ultima Modificacion: divendres, 21 de març de 2025, 11:44:04
+  Ultima Modificacion: dissabte, 22 de març de 2025, 21:51:19
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -74,6 +74,8 @@ bool cadsep(Cadena d,char** f,char s) {
 		else return cadsep(d,f,s);
 	} else return true;
 }
+
+//TODO Cadena a minusculas
 
 	
 
