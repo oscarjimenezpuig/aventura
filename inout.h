@@ -2,7 +2,7 @@
 ============================================================
   Fichero: inout.h
   Creado: 17-03-2025
-  Ultima Modificacion: dissabte, 22 de març de 2025, 21:50:59
+  Ultima Modificacion: dilluns, 24 de març de 2025, 11:28:59
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -37,14 +37,8 @@ void outat(Atributo a);
 void cadcpy(Cadena d,char* o);
 /* copia un string en una cadena */
 
-bool cadequ(char* a,char* b);
-/* mira si dos cadenas son iguales */
+bool cadequ(char* a,char* b,bool insensitive);
+/* mira si dos cadenas son iguales insensitive=true: case insensitive*/
 
 bool cadsep(Cadena d,char** f,char separador);
 /* separa f y obtiene la primera palabra diferente al vacio, responde true si encuentra palabra*/
-
-bool cadlow(Cadena c);
-/* cadena a minusculas */
-
-
-

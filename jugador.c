@@ -2,7 +2,7 @@
 ============================================================
   Fichero: jugador.c
   Creado: 19-03-2025
-  Ultima Modificacion: dissabte, 22 de març de 2025, 21:00:43
+  Ultima Modificacion: dilluns, 24 de març de 2025, 11:29:09
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -16,6 +16,10 @@ typedef struct {
 	u1 orden;
 	Cadena complemento[2];
 } Token;
+
+static Token toknew() {
+	return (Token){0,{"",""}};
+}
 
 static void reppoint(u1* p) {
 	char* car[]={"ATAQUE","DESTREZA","CAPACIDAD"};
@@ -68,6 +72,22 @@ static u1 separa(Cadena orden,Cadena* frase) {
 	return palabras;
 }
 
+static bool inventario() {
+	u1 size=ojug->contenido.size;
+	if(!size) out("No llevas nada encima...");
+	else {
+		out("Tienes: ");
+		outnl(1);
+		for(u1 k=0;k<size;k++) {
+			u1 nobj=ojug->contenido.data[k];
+			Objeto* obj=objget(nobj);
+			outtb(1);
+			out("-%s",obj->nombre);
+		}
+	}
+	return true;
+}
+
 static bool actsep(Token tok) {
 	switch(tok.orden) {
 		case ANORTE:
@@ -77,6 +97,12 @@ static bool actsep(Token tok) {
 		case AARRIBA:
 		case AABAJO:
 			return psimov(idjug,tok.orden);
+		case ACOGER:
+			return psicog(idjug,tok.complemento[0]);
+		case ADEJAR:
+			return psidej(idjug,tok.complemento[0]);
+		case AINVENTARIO:
+			return  inventario();
 		case AFINALIZAR:
 			finset(0);
 			return true;
@@ -95,7 +121,7 @@ bool jugact() {
 			Cadena token[3];
 			u1 tokens=separa(orden,token);
 			if(tokens) {
-				Token tok;
+				Token tok=toknew();
 				if((tok.orden=accfnd(token[0]))) {
 					for(u1 k=0;k<tokens-1;k++) {
 						cadcpy(tok.complemento[k],token[k+1]);

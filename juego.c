@@ -2,7 +2,7 @@
 ============================================================
   Fichero: juego.c
   Creado: 20-03-2025
-  Ultima Modificacion: divendres, 21 de març de 2025, 12:30:36
+  Ultima Modificacion: dilluns, 24 de març de 2025, 11:05:59
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -18,6 +18,13 @@ static void mapa_inicia() {
 	loccon(3,1,SUR,false);
 }
 
+static void items_inicia() {
+	u1 itid=ITMID;
+	if(itmnew(itid,"Pan","Una bonita barra de pan",true,0)) {
+		objins(3,itid++);
+	}
+}
+
 static bool jugador_inicia() {
 	if(jugnew(JUGID)) objins(1,JUGID);
 	else {
@@ -30,6 +37,7 @@ static bool jugador_inicia() {
 
 bool juego_inicia() {
 	mapa_inicia();
+	items_inicia();
 	return jugador_inicia();
 }
 

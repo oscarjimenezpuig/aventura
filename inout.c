@@ -2,7 +2,7 @@
 ============================================================
   Fichero: inout.c
   Creado: 17-03-2025
-  Ultima Modificacion: dissabte, 22 de març de 2025, 21:51:19
+  Ultima Modificacion: dilluns, 24 de març de 2025, 11:28:59
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -49,11 +49,21 @@ void cadcpy(Cadena d,char* o) {
 	*ptrd='\0';
 }
 
-bool cadequ(char* a,char* b) {
+static bool chrequ(char a,char b,bool ins) {
+	if(a==b) return true;
+	else if(ins) {
+		if(a>='A' && a<='Z') a=a-'A'+'a';
+		else if(b>='A' && b<='Z') b=b-'A'+'a';
+		return chrequ(a,b,ins);
+	}
+	return false;
+}
+
+bool cadequ(char* a,char* b,bool ins) {
 	char* ptra=a;
 	char* ptrb=b;
 	while(*ptra!='\0') {
-		if(*ptra!=*ptrb) return false;
+		if(!chrequ(*ptra,*ptrb,ins)) return false;
 		ptra++;
 		ptrb++;
 	}
@@ -74,9 +84,3 @@ bool cadsep(Cadena d,char** f,char s) {
 		else return cadsep(d,f,s);
 	} else return true;
 }
-
-//TODO Cadena a minusculas
-
-	
-
-

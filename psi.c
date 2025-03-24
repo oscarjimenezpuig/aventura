@@ -2,7 +2,7 @@
 ============================================================
   Fichero: psi.c
   Creado: 18-03-2025
-  Ultima Modificacion: dissabte, 22 de març de 2025, 20:59:47
+  Ultima Modificacion: dilluns, 24 de març de 2025, 11:28:40
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -68,7 +68,68 @@ bool psimov(u1 psi,u1 adir) {
 	return false;
 }
 
-					
+static Objeto* conxnom(Objeto* contenedor,char* nombre) {
+	for(u1 k=0;k<contenedor->contenido.size;k++) {
+		u1 nobj=contenedor->contenido.data[k];
+		Objeto* obj=objget(nobj);
+		if(cadequ(nombre,obj->nombre,true)) {
+			return obj;
+		}
+	}
+	return NULL;
+}
+
+bool psicog(u1 psi,char* nombre_objeto) {
+	char* men[]={	"Lo cojo",
+					"No puedo coger nada mas...",
+					"No veo eso...",
+					"Eso no lo puedo coger..."
+	};
+	u1 ret=0;
+	Objeto* opsi=objget(psi);
+	if(opsi) {
+		if(opsi->contenido.size<opsi->capacidad) {
+			Objeto* localidad=objget(opsi->contenedor);
+			Objeto* objeto=conxnom(localidad,nombre_objeto);
+			if(objeto) {
+				if(objeto->tipo==ITEM && objeto->cogible) {
+					objexp(objeto->id);
+					objins(psi,objeto->id);
+				} else ret=3;
+			} else ret=2;
+		} else ret=1;
+		if(isju(psi)) {
+			out("%s",men[ret]);
+			outnl(1);
+		}
+		return (ret==0)?true:false;
+	}
+	return false;
+}
+
+bool psidej(u1 psi,char* nombre_objeto) {
+	char* men[]={	"Lo dejo",
+					"No lo tengo..."
+	};
+	u1 ret=0;
+	Objeto* opsi=objget(psi);
+	Objeto* olocalidad=objget(opsi->contenedor);
+	if(opsi && olocalidad) {
+		Objeto* objeto=conxnom(opsi,nombre_objeto);
+		if(objeto) {
+			objexp(objeto->id);
+			objins(olocalidad->id,objeto->id);
+		} else ret=1;
+		if(isju(psi)) {
+			out("%s",men[ret]);
+			outnl(1);
+		}
+		return (ret==0)?true:false;
+	}
+	return false;
+}
+
+
 
 
 

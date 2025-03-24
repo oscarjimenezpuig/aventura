@@ -2,7 +2,7 @@
 ============================================================
   Fichero: acciones.c
   Creado: 17-03-2025
-  Ultima Modificacion: dissabte, 22 de març de 2025, 20:57:59
+  Ultima Modificacion: dilluns, 24 de març de 2025, 11:28:26
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -45,7 +45,8 @@ static void accdef() {
 	accnew(13,"huir");
 	accnew(14,"nada");
 	accins(14,"descansa");
-	accins(15,"fin");
+	accins(15,"inventario");
+	accins(16,"fin");
 }
 
 u1 accfnd(char* a) {
@@ -54,7 +55,7 @@ u1 accfnd(char* a) {
 	for(u1 id=1;id<ACCIONES;id++) {
 		Accion* ac=acciones+id;
 		for(u1 s=0;s<ac->sinonimos;s++) {
-			if(cadequ(a,ac->verbo[s])) return id;
+			if(cadequ(a,ac->verbo[s],true)) return id;
 		}
 	}
 	return ANULL;

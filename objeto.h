@@ -2,7 +2,7 @@
 ============================================================
   Fichero: objeto.h
   Creado: 16-03-2025
-  Ultima Modificacion: divendres, 21 de març de 2025, 12:11:02
+  Ultima Modificacion: dilluns, 24 de març de 2025, 10:59:51
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -12,6 +12,7 @@
 #define NIL 0
 #define LOCALIDAD 1
 #define PSI 2
+#define ITEM 3
 
 #define NORTE 0
 #define OESTE 1
@@ -36,6 +37,10 @@ typedef struct {
 		struct { //psi
 			u1 ataque,destreza,capacidad;
 			bool jugador,muerto,amigo;
+		};
+		struct { //item
+			bool cogible;
+			u1 plus;
 		};
 	};
 } Objeto;

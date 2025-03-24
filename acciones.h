@@ -2,7 +2,7 @@
 ============================================================
   Fichero: acciones.h
   Creado: 17-03-2025
-  Ultima Modificacion: dissabte, 22 de març de 2025, 20:57:33
+  Ultima Modificacion: dilluns, 24 de març de 2025, 10:17:48
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -26,7 +26,8 @@
 #define AATACAR 12
 #define AHUIR 13
 #define ADESCANSAR 14
-#define AFINALIZAR 15
+#define AINVENTARIO 15
+#define AFINALIZAR 16
 
 #define ACCIONES AFINALIZAR+1
 
