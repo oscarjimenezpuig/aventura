@@ -2,7 +2,7 @@
 ============================================================
   Fichero: objeto.c
   Creado: 16-03-2025
-  Ultima Modificacion: divendres, 21 de març de 2025, 12:23:02
+  Ultima Modificacion: dimecres, 26 de març de 2025, 12:46:51
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -72,10 +72,10 @@ bool objexp(u1 o) {
 
 Array objsel(Condicion c) {
 	Array a=arrnew();
-	Objeto* ptr=objetos;
-	while(ptr!=objetos+OBJETOS) {
-		if(ptr->tipo!=NIL && c(ptr)) arrpsh(&a,ptr->id);
-		ptr++;
+	int id=1;
+	while(id<OBJETOS) {
+		if(c(id)) arrpsh(&a,id);
+		id++;
 	}
 	return a;
 }
@@ -93,14 +93,23 @@ static void locprt(Objeto* o) {
 		out("No hay");
 	}
 	outnl(1);
-	if(o->contenido.size>1) {
+	Objeto* conloc=objget(o->contenedor);
+	conloc=(conloc && conloc->tipo==LOCALIDAD)?conloc:NULL;
+	if(o->contenido.size>1 || conloc) {
 		out("Aqui puedes ver: ");
 		outnl(1);
+		if(conloc) {
+			outtb(1);
+			out("-Salida a %s",conloc->nombre);
+		}
 		for(u1 k=0;k<o->contenido.size;k++) {
 			outtb(1);
 			Objeto* oc=objget(o->contenido.data[k]);
 			if(oc->tipo==PSI && oc->jugador) continue;
-			out("-%s",oc->nombre);
+			if(oc->tipo==LOCALIDAD) {
+				out("-Entrada a ");
+			} else out("-");
+			out("%s",oc->nombre);
 			outnl(1);
 		}
 	}

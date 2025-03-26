@@ -2,7 +2,7 @@
 ============================================================
   Fichero: juego.c
   Creado: 20-03-2025
-  Ultima Modificacion: dilluns, 24 de març de 2025, 11:05:59
+  Ultima Modificacion: dimecres, 26 de març de 2025, 12:36:26
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -16,6 +16,10 @@ static void mapa_inicia() {
 	loccon(1,2,NORTE,true);
 	loccon(2,3,ESTE,true);
 	loccon(3,1,SUR,false);
+	locnew(4,"Caverna","Una gran caverna llena de estalagtitas");
+	locnew(5,"Pasillo","Un pequeño pasillo muy oscuro");
+	objins(3,4);
+	loccon(4,5,SUR,true);
 }
 
 static void items_inicia() {
@@ -49,6 +53,7 @@ int main() {
 			jugact();
 			trnpss();
 		}
+		finfinprt();
 	}
 	return 0;
 }

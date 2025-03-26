@@ -2,7 +2,7 @@
 ============================================================
   Fichero: inout.c
   Creado: 17-03-2025
-  Ultima Modificacion: dilluns, 24 de març de 2025, 11:28:59
+  Ultima Modificacion: dimecres, 26 de març de 2025, 12:38:58
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -49,12 +49,18 @@ void cadcpy(Cadena d,char* o) {
 	*ptrd='\0';
 }
 
+static void cptolw(char* a) {
+	if(*a>='A' && *a<='Z') {
+		*a=*a-'A'+'a';
+	}
+}
+
 static bool chrequ(char a,char b,bool ins) {
 	if(a==b) return true;
 	else if(ins) {
-		if(a>='A' && a<='Z') a=a-'A'+'a';
-		else if(b>='A' && b<='Z') b=b-'A'+'a';
-		return chrequ(a,b,ins);
+		cptolw(&a);
+		cptolw(&b);
+		return chrequ(a,b,false);
 	}
 	return false;
 }
@@ -83,4 +89,10 @@ bool cadsep(Cadena d,char** f,char s) {
 		if(*ptrf=='\0') return false;
 		else return cadsep(d,f,s);
 	} else return true;
+}
+
+u1 cadlen(char* c) {
+	char* ptrc=c;
+	while(*ptrc!='\0') ptrc++;
+	return (u1)(ptrc-c);
 }

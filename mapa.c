@@ -2,7 +2,7 @@
 ============================================================
   Fichero: mapa.c
   Creado: 16-03-2025
-  Ultima Modificacion: divendres, 21 de març de 2025, 12:12:14
+  Ultima Modificacion: dimecres, 26 de març de 2025, 11:18:30
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -14,6 +14,7 @@ bool locnew(u1 i,char* n,char* d) {
 	if(o) {
 		cadcpy(o->descripcion,d);
 		for(u1 k=0;k<SALIDAS;k++) o->salida[k]=0;
+		o->visitado=false;
 	}
 	return (o==NULL)?false:true;
 }

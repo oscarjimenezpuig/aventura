@@ -2,7 +2,7 @@
 ============================================================
   Fichero: inout.h
   Creado: 17-03-2025
-  Ultima Modificacion: dilluns, 24 de març de 2025, 11:28:59
+  Ultima Modificacion: dimecres, 26 de març de 2025, 14:16:18
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -10,14 +10,13 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+#include "rand.h"
+
 #define CADLEN 100
 #define TABSIZ 4
 
-typedef unsigned char u1;
 
 typedef char Cadena[CADLEN+1];
-
-typedef enum {false,true} bool;
 
 typedef enum {NORMAL=0,BOLD=1,INVERSE=7} Atributo;
 
@@ -42,3 +41,6 @@ bool cadequ(char* a,char* b,bool insensitive);
 
 bool cadsep(Cadena d,char** f,char separador);
 /* separa f y obtiene la primera palabra diferente al vacio, responde true si encuentra palabra*/
+
+u1 cadlen(char* c);
+/* da la longitud de la cadena */

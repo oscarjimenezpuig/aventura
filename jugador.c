@@ -2,7 +2,7 @@
 ============================================================
   Fichero: jugador.c
   Creado: 19-03-2025
-  Ultima Modificacion: dilluns, 24 de març de 2025, 11:29:09
+  Ultima Modificacion: dimecres, 26 de març de 2025, 13:56:32
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -103,17 +103,30 @@ static bool actsep(Token tok) {
 			return psidej(idjug,tok.complemento[0]);
 		case AINVENTARIO:
 			return  inventario();
+		case ADESCANSAR:
+			return psidsc(idjug);
+		case AENTRAR:
+			return psient(idjug,tok.complemento[0]);
+		case ASALIR:
+			return psisal(idjug);
 		case AFINALIZAR:
-			finset(0);
+			finset(FINQUIT);
 			return true;
 		default:
 			return false;
 	}
 }
 
+static void jugvis() {
+	//establece la localidad actual como visitada
+	Objeto* oloc=objget(ojug->contenedor);
+	if(oloc) oloc->visitado=true;
+}
+
 bool jugact() {
 	bool ok=false;
 	if(ojug && !ojug->muerto) {
+		jugvis();
 		while(!ok) {
 			out("Que quieres hacer? ");
 			Cadena orden;

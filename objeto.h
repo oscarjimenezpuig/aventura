@@ -2,7 +2,7 @@
 ============================================================
   Fichero: objeto.h
   Creado: 16-03-2025
-  Ultima Modificacion: dilluns, 24 de març de 2025, 10:59:51
+  Ultima Modificacion: dimecres, 26 de març de 2025, 12:41:38
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -33,9 +33,10 @@ typedef struct {
 	union {
 		struct { //localidad
 			u1 salida[SALIDAS];
+			bool visitado;
 		};
 		struct { //psi
-			u1 ataque,destreza,capacidad;
+			u1 ataque,destreza,capacidad,vida;
 			bool jugador,muerto,amigo;
 		};
 		struct { //item
@@ -45,7 +46,7 @@ typedef struct {
 	};
 } Objeto;
 
-typedef bool (*Condicion)(Objeto* objeto);
+typedef bool (*Condicion)(u1 idobj);
 
 Objeto* objnew(u1 id,u1 tipo,char* nombre);
 //define un nuevo objeto (el identificador 0 reservado para la localidad universo)2
