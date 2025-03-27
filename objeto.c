@@ -2,7 +2,7 @@
 ============================================================
   Fichero: objeto.c
   Creado: 16-03-2025
-  Ultima Modificacion: dimecres, 26 de març de 2025, 12:46:51
+  Ultima Modificacion: dijous, 27 de març de 2025, 11:13:01
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -95,19 +95,57 @@ static void locprt(Objeto* o) {
 	outnl(1);
 	Objeto* conloc=objget(o->contenedor);
 	conloc=(conloc && conloc->tipo==LOCALIDAD)?conloc:NULL;
-	if(o->contenido.size>1 || conloc) {
+	Array ene=arrnew();
+	Array ami=arrnew();
+	Array otr=arrnew();
+	for(u1 k=0;k<o->contenido.size;k++) {
+		Objeto* oc=objget(arrget(o->contenido,k));
+		if(oc->tipo==PSI && oc->jugador) continue;
+		if(oc->tipo==PSI && !oc->muerto) {
+			if(oc->amigo) arrpsh(&ami,oc->id);
+			else arrpsh(&ene,oc->id);
+		} else {
+			arrpsh(&otr,oc->id);
+		}
+	}
+	if(ene.size) {
+		out("Atencion, enemigos en esta localidad...");
+		outnl(1);
+		outtb(1);
+		for(u1 k=0;k<ene.size;k++) {
+			Objeto* oene=objget(arrget(ene,k));
+			if(oene) {
+				out("-%s",oene->nombre);
+				outnl(1);
+			}
+		}
+	}
+	if(ami.size) {
+		out("Tienes amigos aqui...");
+		outnl(1);
+		outtb(1);
+		for(u1 k=0;k<ami.size;k++) {
+			Objeto* oene=objget(arrget(ami,k));
+			if(oene) {
+				out("-%s",oene->nombre);
+				outnl(1);
+			}
+		}
+	}
+	if(!ene.size && otr.size) {
 		out("Aqui puedes ver: ");
 		outnl(1);
 		if(conloc) {
 			outtb(1);
 			out("-Salida a %s",conloc->nombre);
 		}
-		for(u1 k=0;k<o->contenido.size;k++) {
+		for(u1 k=0;k<otr.size;k++) {
 			outtb(1);
-			Objeto* oc=objget(o->contenido.data[k]);
-			if(oc->tipo==PSI && oc->jugador) continue;
+			Objeto* oc=objget(arrget(otr,k));
 			if(oc->tipo==LOCALIDAD) {
 				out("-Entrada a ");
+			} else if(oc->tipo==PSI) {
+				out("-Cadaver de ");
 			} else out("-");
 			out("%s",oc->nombre);
 			outnl(1);

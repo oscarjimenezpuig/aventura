@@ -2,7 +2,7 @@
 ============================================================
   Fichero: array.c
   Creado: 16-03-2025
-  Ultima Modificacion: dimarts, 18 de març de 2025, 14:33:38
+  Ultima Modificacion: dijous, 27 de març de 2025, 11:06:59
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -10,7 +10,17 @@
 #include "array.h"
 
 Array arrnew() {
-	return (Array){0};
+	Array a;
+	a.size=0;
+	u1* ptra=a.data;
+	while(ptra!=a.data+ARRSIZE) {
+		*ptra++=0;
+	}
+	return a;
+}
+
+u1 arrget(Array a,u1 pos) {
+	return a.data[pos];
 }
 
 void arrclr(Array* a) {

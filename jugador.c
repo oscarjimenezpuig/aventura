@@ -2,7 +2,7 @@
 ============================================================
   Fichero: jugador.c
   Creado: 19-03-2025
-  Ultima Modificacion: dimecres, 26 de març de 2025, 13:56:32
+  Ultima Modificacion: dijous, 27 de març de 2025, 11:10:06
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -109,6 +109,8 @@ static bool actsep(Token tok) {
 			return psient(idjug,tok.complemento[0]);
 		case ASALIR:
 			return psisal(idjug);
+		case AATACAR:
+			return psiata(idjug,tok.complemento[0]);
 		case AFINALIZAR:
 			finset(FINQUIT);
 			return true;

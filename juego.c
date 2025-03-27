@@ -2,7 +2,7 @@
 ============================================================
   Fichero: juego.c
   Creado: 20-03-2025
-  Ultima Modificacion: dimecres, 26 de març de 2025, 12:36:26
+  Ultima Modificacion: dijous, 27 de març de 2025, 11:08:11
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -29,6 +29,12 @@ static void items_inicia() {
 	}
 }
 
+static void npis_inicia() {
+	static u1 npis=PSIID;
+	psinew(npis,"Talon","Guapo y bello",false,true,5,3,1);
+	objins(5,npis);
+}
+
 static bool jugador_inicia() {
 	if(jugnew(JUGID)) objins(1,JUGID);
 	else {
@@ -42,6 +48,7 @@ static bool jugador_inicia() {
 bool juego_inicia() {
 	mapa_inicia();
 	items_inicia();
+	npis_inicia();
 	return jugador_inicia();
 }
 

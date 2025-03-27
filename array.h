@@ -2,7 +2,7 @@
 ============================================================
   Fichero: array.h
   Creado: 16-03-2025
-  Ultima Modificacion: dimarts, 18 de març de 2025, 11:13:44
+  Ultima Modificacion: dijous, 27 de març de 2025, 10:50:30
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -17,6 +17,8 @@ typedef struct {
 } Array;
 
 Array arrnew();
+
+u1 arrget(Array array,u1 pos);
 
 void arrclr(Array* array);
 
