@@ -2,7 +2,7 @@
 ============================================================
   Fichero: objeto.c
   Creado: 16-03-2025
-  Ultima Modificacion: dijous, 27 de març de 2025, 11:13:01
+  Ultima Modificacion: divendres, 28 de març de 2025, 11:23:49
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -132,7 +132,7 @@ static void locprt(Objeto* o) {
 			}
 		}
 	}
-	if(!ene.size && otr.size) {
+	if(!ene.size && (otr.size || conloc)) {
 		out("Aqui puedes ver: ");
 		outnl(1);
 		if(conloc) {

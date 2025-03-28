@@ -2,7 +2,7 @@
 ============================================================
   Fichero: psi.h
   Creado: 18-03-2025
-  Ultima Modificacion: dimecres, 26 de març de 2025, 13:53:07
+  Ultima Modificacion: dijous, 27 de març de 2025, 14:36:38
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -40,6 +40,9 @@ bool psimat(u1 psi);
 
 bool psiata(u1 psi,char* nombre_pis);
 // se lanza un ataque a un psi
+
+bool psihui(u1 psi);
+// se huye en una direccion aleatoria si se puede
 
 
 

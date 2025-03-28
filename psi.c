@@ -2,7 +2,7 @@
 ============================================================
   Fichero: psi.c
   Creado: 18-03-2025
-  Ultima Modificacion: dimecres, 26 de març de 2025, 14:30:55
+  Ultima Modificacion: divendres, 28 de març de 2025, 11:18:49
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -215,7 +215,9 @@ bool psimat(u1 psi) {
 		opsi->muerto=true;
 		opsi->vida=0;
 		for(u1 k=0;k<opsi->contenido.size;k++) {
-			objins(nloc,opsi->contenido.data[k]);
+			u1 ob=arrget(opsi->contenido,k);
+			objexp(ob);
+			objins(nloc,ob);
 		}
 		if(isju(psi)) {
 			out("Has muerto...");
@@ -262,6 +264,13 @@ bool psiata(u1 psi,char* np) {
 					out("%s ataca a %s");
 					outnl(1);
 				}
+				if(riv->amigo) {
+					if(ojug==opsi) {
+						out("%s era amigo tuyo...",riv->nombre);
+						outnl(1);
+						riv->amigo=false;
+					}
+				}
 				u1 difer=atatot(opsi)-atatot(riv);
 				if(difer>0) {
 					if(jugloc==psiloc) {
@@ -295,6 +304,103 @@ bool psiata(u1 psi,char* np) {
 	}
 	return false;
 }
+
+static Array eneplc(Objeto* loc,bool amigo) {
+	Array ene=arrnew();
+	for(u1 k=0;k<loc->contenido.size;k++) {
+		u1 no=arrget(loc->contenido,k);
+		Objeto* ono=objget(no);
+		if(ono->tipo==PSI && ono->amigo!=amigo) {
+			arrpsh(&ene,no);
+		}
+	}
+	return ene;
+}
+
+static bool enechk(Objeto* psi,Objeto* ene) {
+	int hpsi=psi->destreza+rnd(1,6);
+	int hene=ene->destreza+rnd(1,6);
+	if(hpsi<=hene) {
+		psiata(ene->id,psi->nombre);
+		return false;
+	}
+	return true;
+}
+
+static bool eneschk(Objeto* psi,Array enemigos) {
+	int escapa=true;
+	if(enemigos.size>0) {
+		for(u1 k=0;k<enemigos.size && escapa;k++) {
+			u1 no=arrget(enemigos,k);
+			Objeto* ono=objget(no);
+			escapa=enechk(psi,ono);
+		}
+	}	
+	return escapa;
+}		
+
+static bool salrnd(u1 psi,Objeto* loc) {
+	u1 orden[256];
+	char* complemento[256];
+	u1 size=0;
+	Objeto* cloc=objget(loc->contenedor);
+	if(cloc && cloc->tipo==LOCALIDAD) {
+		orden[size++]=ASALIR;
+	}
+	for(u1 k=0;k<loc->contenido.size;k++) {
+		u1 ncon=arrget(loc->contenido,k);
+		Objeto* ocon=objget(ncon);
+		if(ocon->tipo==LOCALIDAD) {
+			orden[size]=AENTRAR;
+			complemento[size++]=ocon->nombre;
+		}
+	}
+	for(u1 k=0;k<SALIDAS;k++) {
+		if(loc->salida[k]!=0) {
+			orden[size++]=k+1;
+		}
+	}
+	if(size>0) {
+		u1 sac=rnd(0,size-1);
+		u1 ord=orden[sac];
+		if(ord==AENTRAR) {
+			return psient(psi,complemento[sac]);
+		} else if(ord==ASALIR) {
+			return psisal(psi);
+		} else {
+			return psimov(psi,ord);
+		}
+	} else {
+		if(isju(psi)) {
+			out("No hay salidas, no puedes escapar!!!");
+			outnl(1);
+		}
+	}
+	return true;
+}
+
+bool psihui(u1 psi) {
+	Objeto* opsi=objget(psi);
+	Objeto* oloc=(opsi)?objget(opsi->contenedor):NULL;
+	if(oloc) {
+		Array enemigos=eneplc(oloc,opsi->amigo);
+		int escapa=eneschk(opsi,enemigos);
+		if(escapa) {
+			return salrnd(psi,oloc);
+		} else {
+			if(isju(psi)) {
+				out("No has conseguido escapar...");
+				outnl(1);
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+
+
+
 			
 				
 

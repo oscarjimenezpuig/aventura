@@ -2,7 +2,7 @@
 ============================================================
   Fichero: jugador.c
   Creado: 19-03-2025
-  Ultima Modificacion: dijous, 27 de març de 2025, 11:10:06
+  Ultima Modificacion: divendres, 28 de març de 2025, 11:20:10
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -83,6 +83,7 @@ static bool inventario() {
 			Objeto* obj=objget(nobj);
 			outtb(1);
 			out("-%s",obj->nombre);
+			outnl(1);
 		}
 	}
 	return true;
@@ -111,6 +112,8 @@ static bool actsep(Token tok) {
 			return psisal(idjug);
 		case AATACAR:
 			return psiata(idjug,tok.complemento[0]);
+		case AHUIR:
+			return psihui(idjug);
 		case AFINALIZAR:
 			finset(FINQUIT);
 			return true;
