@@ -2,7 +2,7 @@
 ============================================================
   Fichero: objeto.h
   Creado: 16-03-2025
-  Ultima Modificacion: dimecres, 26 de març de 2025, 12:41:38
+  Ultima Modificacion: diumenge, 30 de març de 2025, 08:55:54
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -23,6 +23,10 @@
 
 #define SALIDAS 6
 
+#define MAXFEAT 12 // maximo de cualquier caracteristica de pis
+
+typedef bool (*IA)(u1);
+
 typedef struct {
 	u1 id;
 	u1 tipo;
@@ -38,6 +42,7 @@ typedef struct {
 		struct { //psi
 			u1 ataque,destreza,capacidad,vida;
 			bool jugador,muerto,amigo;
+			IA ia;
 		};
 		struct { //item
 			bool cogible;

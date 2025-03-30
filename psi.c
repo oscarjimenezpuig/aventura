@@ -2,7 +2,7 @@
 ============================================================
   Fichero: psi.c
   Creado: 18-03-2025
-  Ultima Modificacion: divendres, 28 de març de 2025, 11:18:49
+  Ultima Modificacion: diumenge, 30 de març de 2025, 11:11:46
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -11,20 +11,20 @@
 
 static u1 idjugador=0;
 
-bool psinew(u1 i,char* n,char* d,bool j,bool f,u1 a,u1 s,u1 c) {
+bool psinew(u1 i,char* n,char* d,bool j,bool f,u1 a,u1 s,u1 c,IA ia) {
 	if(!j || (j && idjugador==0)) {
 		Objeto* opsi=objnew(i,PSI,n);
 		if(opsi) {
 			cadcpy(opsi->descripcion,d);
-			opsi->ataque=a;
-			opsi->destreza=s;
+			opsi->ataque=(a>MAXFEAT)?MAXFEAT:a;
+			opsi->destreza=(s>MAXFEAT)?MAXFEAT:s;
 			opsi->capacidad=c;
 			opsi->jugador=j;
 			opsi->amigo=f;
-			opsi->vida=MAXVIDA;
+			opsi->vida=MAXFEAT;
 			idjugador=(j)?i:idjugador;
 			opsi->muerto=false;
-
+			opsi->ia=ia;
 			return true;
 		}
 	}
@@ -36,13 +36,14 @@ u1 psijug() {
 }
 
 #define isju(A) ((A)==idjugador)
+#define juin(P,A) (idjugador!=0 && idjugador!=(P) && (objget(idjugador)->contenedor==(A)))
+
 
 bool psimov(u1 psi,u1 adir) {
 	char* salnom[]={"norte","oeste","abajo","arriba","este","sur"};
 	Objeto* ojug=objget(idjugador);
 	if(ojug) {
 		Objeto* opsi=objget(psi);
-		u1 locjug=ojug->contenedor;
 		if(opsi) {
 			u1 oloc=opsi->contenedor;
 			if(oloc) {
@@ -54,14 +55,18 @@ bool psimov(u1 psi,u1 adir) {
 					objins(nloc,psi);
 					if(isju(psi)) {
 						out("Vas %s",salnom[dir]);
-					} else if(locjug==oloc) {
+						outnl(1);
+					} else if(juin(psi,oloc)){
 						out("%s va hacia %s",opsi->nombre,salnom[dir]);
-					} else if(locjug==nloc) {
-						out("%s entra desde %s",opsi->nombre,salnom[SALIDAS-1-dir]);
+						outnl(1);
+					} else if(juin(psi,nloc)) {
+						out("%s viene desde %s",opsi->nombre,salnom[SALIDAS-1-dir]);
+						outnl(1);
 					}
 					return true;
 				} else if(isju(psi)) {
 					out("No hay salida visible en esa direccion...");
+					outnl(1);
 				}
 			}
 		}
@@ -97,6 +102,10 @@ bool psicog(u1 psi,char* nombre_objeto) {
 				if(objeto->tipo==ITEM && objeto->cogible) {
 					objexp(objeto->id);
 					objins(psi,objeto->id);
+					if(juin(psi,localidad->id)) {
+						out("%s coge %s...",opsi->nombre,nombre_objeto);
+						outnl(1);
+					}
 				} else ret=3;
 			} else ret=2;
 		} else ret=1;
@@ -121,6 +130,10 @@ bool psidej(u1 psi,char* nombre_objeto) {
 		if(objeto) {
 			objexp(objeto->id);
 			objins(olocalidad->id,objeto->id);
+			if(juin(psi,olocalidad->id)) {
+				out("%s deja %s...",opsi->nombre,nombre_objeto);
+				outnl(1);
+			}
 		} else ret=1;
 		if(isju(psi)) {
 			out("%s",men[ret]);
@@ -145,11 +158,15 @@ bool psidsc(u1 psi) {
 		for(u1 k=0;k<oloc->contenido.size && !haypsi;k++) {
 			u1 noc=oloc->contenido.data[k];
 			Objeto* oc=objget(noc);
-			haypsi=(oc->tipo==PSI) && (oc->amigo!=opsi->amigo);
+			haypsi=(oc->tipo==PSI) && (oc->amigo!=opsi->amigo) && (!oc->muerto);
 		}
 		if(!haypsi) {
-			if(opsi->vida<MAXVIDA) opsi->vida+=APD;	
+			if(opsi->vida<MAXFEAT) opsi->vida+=APD;	
 			else ret=2;
+			if(juin(psi,oloc->id)) {
+				out("%s descansa...",opsi->nombre);
+				outnl(1);
+			}
 		} else ret=1;
 	}
 	if(isju(psi)) {
@@ -162,7 +179,7 @@ bool psidsc(u1 psi) {
 bool psient(u1 psi,char* no) {
 	char* men[]={	"Entro...",
 					"No veo ese lugar...",
-					"No puedo entrar ahi..."
+					"No puedo entrar ahi...",
 	};
 	u1 ret=0;
 	Objeto* opsi=objget(psi);
@@ -174,6 +191,13 @@ bool psient(u1 psi,char* no) {
 				if(entrada->tipo==LOCALIDAD) {
 					objexp(psi);
 					objins(entrada->id,psi);
+					if(juin(psi,oloc->id)) {
+						out("%s entra en %s...",opsi->nombre,entrada->nombre);
+						outnl(1);
+					} else if(juin(psi,entrada->id)) {
+						out("%s entra...",opsi->nombre);
+						outnl(1);
+					}
 				} else ret=2;
 			} else ret=1;
 			if(isju(psi)) {
@@ -198,6 +222,14 @@ bool psisal(u1 psi) {
 		if(coloc && coloc->tipo==LOCALIDAD) {
 			objexp(psi);
 			objins(coloc->id,psi);
+			if(juin(psi,oloc->id)) {
+				out("%s sale...",opsi->nombre);
+				outnl(1);
+			}
+			if(juin(psi,coloc->id)) {
+				out("%s entra...",opsi->nombre);
+				outnl(1);
+			}
 		} else ret=1;
 		if(isju(psi)) {
 			out("%s",men[ret]);
@@ -261,7 +293,7 @@ bool psiata(u1 psi,char* np) {
 					out("%s te ataca",opsi->nombre);
 					outnl(1);
 				} else if(jugloc==psiloc) {
-					out("%s ataca a %s");
+					out("%s ataca a %s",opsi->nombre,riv->nombre);
 					outnl(1);
 				}
 				if(riv->amigo) {
@@ -271,7 +303,7 @@ bool psiata(u1 psi,char* np) {
 						riv->amigo=false;
 					}
 				}
-				u1 difer=atatot(opsi)-atatot(riv);
+				int difer=atatot(opsi)-atatot(riv);
 				if(difer>0) {
 					if(jugloc==psiloc) {
 						out("El golpe es bueno...");
@@ -391,12 +423,97 @@ bool psihui(u1 psi) {
 			if(isju(psi)) {
 				out("No has conseguido escapar...");
 				outnl(1);
-				return true;
+			} else if(juin(psi,oloc->id)) {
+				out("%s ha intentado escapar pero no lo ha conseguido...",opsi->nombre);
+				outnl(1);
+			}
+			return true;
+		}
+	}
+	return false;
+}
+
+bool psinot(u1 psi) {
+	Objeto* opsi=objget(psi);
+	Objeto* oloc=(opsi)?objget(opsi->contenedor):NULL;
+	if(oloc) {
+		if(isju(psi)) {
+			out("Te quedas petrificado...");
+			outnl(1);
+		} else if(juin(psi,oloc->id)) {
+			out("%s se queda petrificado...",opsi->nombre);
+			outnl(1);
+		}
+		return true;
+	}
+	return false;
+}
+
+bool psiexa(u1 psi,char* nombre) {
+	if(isju(psi)) {
+		Objeto* opsi=objget(psi);
+		Objeto* oloc=(opsi)?objget(opsi->contenedor):NULL;
+		if(oloc) {
+			Objeto* oex=conxnom(opsi,nombre);
+			if(!oex) oex=conxnom(oloc,nombre);
+			if(!oex) {
+				out("No veo eso...");
+			} else {
+				objprt(oex->id);
 			}
 		}
 	}
 	return false;
 }
+
+bool psiinv(u1 psi) {
+	if(isju(psi)) {
+		Objeto* ojug=objget(psi);
+		u1 size=ojug->contenido.size;
+		if(!size) out("No llevas nada encima...");
+		else {
+			out("Tienes: ");
+			outnl(1);
+			for(u1 k=0;k<size;k++) {
+				u1 nobj=ojug->contenido.data[k];
+				Objeto* obj=objget(nobj);
+				outtb(1);
+				out("-%s",obj->nombre);
+				outnl(1);
+			}
+		}
+	}
+	return false;
+}
+
+bool psiact(u1 psi) {
+	Objeto* opsi=objget(psi);
+	if(opsi && opsi->tipo==PSI && !opsi->muerto && opsi->ia) {
+		if(!opsi->ia(psi)) return psinot(psi);
+	}
+	return false;
+}
+
+bool conpsi(u1 psi) {
+	Objeto* opsi=objget(psi);
+	return (opsi && opsi->tipo==PSI && opsi->jugador==false && opsi->ia);
+}
+
+void pssact() {
+	static Array psis;
+	static bool defined=false;
+	if(!defined) {
+		psis=objsel(conpsi);
+	}
+	for(u1 k=0;k<psis.size;k++) {
+		u1 psi=arrget(psis,k);
+		psiact(psi);
+	}
+}
+		
+
+
+	
 
 
 

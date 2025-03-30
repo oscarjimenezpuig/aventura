@@ -2,7 +2,7 @@
 ============================================================
   Fichero: juego.c
   Creado: 20-03-2025
-  Ultima Modificacion: divendres, 28 de març de 2025, 11:14:56
+  Ultima Modificacion: diumenge, 30 de març de 2025, 11:06:52
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -26,18 +26,21 @@ static void mapa_inicia() {
 #define ESCUDO (PAN+1)
 
 static void items_inicia() {
-	if(itmnew(PAN,"Pan","Una bonita barra de pan",true,0)) {
+	if(itmnew(PAN,"Pan","deliciosa y crujiente",true,0)) {
 		objins(3,PAN);
 	}
-	itmnew(ESCUDO,"Escudo","Un escudo antiguo y duradero",true,5);
+	itmnew(ESCUDO,"Escudo","un escudo antiguo y duradero",true,5);
 }
 
 #define TALON PSIID
+#define OGRO (TALON+1)
 
 static void npis_inicia() {
-	psinew(TALON,"Talon","Guapo y bello",false,true,5,3,1);
-	objins(5,TALON);
+	psinew(TALON,"Talon","guapo y bello",false,true,5,3,1,IAhum);
+	objins(2,TALON);
 	objins(TALON,ESCUDO);
+	psinew(OGRO,"Ogro","muy feo y con mocos",false,false,7,7,3,IAhum);
+	objins(5,OGRO);
 }
 
 static bool jugador_inicia() {
@@ -63,6 +66,7 @@ int main() {
 		while(!finget(&valuefin)) {
 			visscr();
 			jugact();
+			pssact();
 			trnpss();
 		}
 		finfinprt();

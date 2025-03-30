@@ -2,16 +2,15 @@
 ============================================================
   Fichero: psi.h
   Creado: 18-03-2025
-  Ultima Modificacion: dijous, 27 de març de 2025, 14:36:38
+  Ultima Modificacion: diumenge, 30 de març de 2025, 09:20:26
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
 
 #include "item.h"
 
-#define MAXVIDA 10 // maximo de vida de un psi
 
-bool psinew(u1 id,char* nombre,char* descripcion,bool jugador,bool amigo,u1 ataque,u1 destreza,u1 capacidad);
+bool psinew(u1 id,char* nombre,char* descripcion,bool jugador,bool amigo,u1 ataque,u1 destreza,u1 capacidad,IA ia);
 // define un nuevo psi
 
 u1 psijug(); 
@@ -44,5 +43,19 @@ bool psiata(u1 psi,char* nombre_pis);
 bool psihui(u1 psi);
 // se huye en una direccion aleatoria si se puede
 
+bool psinot(u1 psi);
+//el psi no hace nada (no hace falta introducirla en ia)
+
+bool psiexa(u1 psi,char* nombre);
+//examinar (accion que solo hace el jugador, retorno false para poder hacer otra accion)
+
+bool psiinv(u1 psi);
+//inventario (accion solo para el jugador, retorno false para poder hacer otra accion);
+
+bool psiact(u1 psi);
+// accion de psi que posee ia
+
+void pssact();
+// accion de todos los psis del juego que tienen ia
 
 

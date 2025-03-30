@@ -2,7 +2,7 @@
 ============================================================
   Fichero: jugador.c
   Creado: 19-03-2025
-  Ultima Modificacion: divendres, 28 de març de 2025, 11:20:10
+  Ultima Modificacion: diumenge, 30 de març de 2025, 09:25:24
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -56,7 +56,7 @@ bool jugnew(u1 id) {
 	outnl(1);
 	u1 pun[]={0,0,0};
 	reppoint(pun);
-	if(psinew(id,s,"",true,true,pun[0],pun[1],pun[2])) {
+	if(psinew(id,s,"",true,true,pun[0],pun[1],pun[2],NULL)) {
 		ojug=objget(id);
 		idjug=id;
 	}
@@ -70,23 +70,6 @@ static u1 separa(Cadena orden,Cadena* frase) {
 		if(cadsep(frase[palabras],&ptro,' ')) palabras++;
 	}
 	return palabras;
-}
-
-static bool inventario() {
-	u1 size=ojug->contenido.size;
-	if(!size) out("No llevas nada encima...");
-	else {
-		out("Tienes: ");
-		outnl(1);
-		for(u1 k=0;k<size;k++) {
-			u1 nobj=ojug->contenido.data[k];
-			Objeto* obj=objget(nobj);
-			outtb(1);
-			out("-%s",obj->nombre);
-			outnl(1);
-		}
-	}
-	return true;
 }
 
 static bool actsep(Token tok) {
@@ -103,7 +86,7 @@ static bool actsep(Token tok) {
 		case ADEJAR:
 			return psidej(idjug,tok.complemento[0]);
 		case AINVENTARIO:
-			return  inventario();
+			return  psiinv(idjug);
 		case ADESCANSAR:
 			return psidsc(idjug);
 		case AENTRAR:
@@ -114,6 +97,8 @@ static bool actsep(Token tok) {
 			return psiata(idjug,tok.complemento[0]);
 		case AHUIR:
 			return psihui(idjug);
+		case AEXAMINAR:
+			return psiexa(idjug,tok.complemento[0]);
 		case AFINALIZAR:
 			finset(FINQUIT);
 			return true;

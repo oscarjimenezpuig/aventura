@@ -2,7 +2,7 @@
 ============================================================
   Fichero: inout.h
   Creado: 17-03-2025
-  Ultima Modificacion: dimecres, 26 de març de 2025, 14:16:18
+  Ultima Modificacion: dissabte, 29 de març de 2025, 21:29:59
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -12,7 +12,7 @@
 
 #include "rand.h"
 
-#define CADLEN 100
+#define CADLEN 255
 #define TABSIZ 4
 
 

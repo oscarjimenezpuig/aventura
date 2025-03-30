@@ -2,12 +2,12 @@
 ============================================================
   Fichero: jugador.h
   Creado: 19-03-2025
-  Ultima Modificacion: divendres, 21 de març de 2025, 11:38:54
+  Ultima Modificacion: dissabte, 29 de març de 2025, 20:59:07
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
 
-#include "psi.h"
+#include "ia.h"
 
 #define TPI 10 //numero total de puntos a repartir al inicio
 

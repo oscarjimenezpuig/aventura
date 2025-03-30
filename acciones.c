@@ -2,7 +2,7 @@
 ============================================================
   Fichero: acciones.c
   Creado: 17-03-2025
-  Ultima Modificacion: dimarts, 25 de març de 2025, 11:30:08
+  Ultima Modificacion: diumenge, 30 de març de 2025, 09:11:44
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -43,10 +43,12 @@ static void accdef() {
 	accnew(11,"usar");
 	accnew(12,"atacar");
 	accnew(13,"huir");
-	accnew(14,"nada");
-	accins(14,"descansar");
-	accins(15,"inventario");
-	accins(16,"fin");
+	accnew(14,"descansar");
+	accnew(15,"inventario");
+	accnew(16,"nada");
+	accnew(17,"examinar");
+	accins(17,"ex");
+	accins(18,"fin");
 }
 
 u1 accfnd(char* a) {
