@@ -2,7 +2,7 @@
 ============================================================
   Fichero: objeto.h
   Creado: 16-03-2025
-  Ultima Modificacion: diumenge, 30 de març de 2025, 08:55:54
+  Ultima Modificacion: dilluns, 31 de març de 2025, 10:41:35
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -48,6 +48,7 @@ typedef struct {
 			bool cogible;
 			u1 plus;
 		};
+		
 	};
 } Objeto;
 
