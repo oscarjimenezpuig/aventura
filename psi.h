@@ -2,13 +2,12 @@
 ============================================================
   Fichero: psi.h
   Creado: 18-03-2025
-  Ultima Modificacion: diumenge, 30 de març de 2025, 09:20:26
+  Ultima Modificacion: dimarts, 1 d’abril de 2025, 12:11:23
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
 
 #include "item.h"
-
 
 bool psinew(u1 id,char* nombre,char* descripcion,bool jugador,bool amigo,u1 ataque,u1 destreza,u1 capacidad,IA ia);
 // define un nuevo psi
@@ -51,6 +50,10 @@ bool psiexa(u1 psi,char* nombre);
 
 bool psiinv(u1 psi);
 //inventario (accion solo para el jugador, retorno false para poder hacer otra accion);
+
+bool psiusa(u1 psi,char* objeto_1,char* objeto_2);
+//usar, solo para el personaje jugador, es necesario para usar, que los dos objetos esten visibles
+//o sean poseidos
 
 bool psiact(u1 psi);
 // accion de psi que posee ia

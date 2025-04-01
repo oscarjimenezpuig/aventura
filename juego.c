@@ -2,7 +2,7 @@
 ============================================================
   Fichero: juego.c
   Creado: 20-03-2025
-  Ultima Modificacion: diumenge, 30 de març de 2025, 11:06:52
+  Ultima Modificacion: dimarts, 1 d’abril de 2025, 12:19:31
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -43,6 +43,20 @@ static void npis_inicia() {
 	objins(5,OGRO);
 }
 
+#define USAPAN 0
+
+static bool usapan(u1 idevento) {
+	out("Me como el pan... Esta bueno... ");
+	outnl(1);
+	objexp(PAN);
+	eveget(USAPAN)->activo=false;
+	return true;
+}
+
+static void usar_inicia() {
+	evunew(USAPAN,PAN,0,usapan);
+}
+
 static bool jugador_inicia() {
 	if(jugnew(JUGID)) objins(1,JUGID);
 	else {
@@ -57,6 +71,7 @@ bool juego_inicia() {
 	mapa_inicia();
 	items_inicia();
 	npis_inicia();
+	usar_inicia();
 	return jugador_inicia();
 }
 

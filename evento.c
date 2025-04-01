@@ -2,7 +2,7 @@
 ============================================================
   Fichero: evento.c
   Creado: 31-03-2025
-  Ultima Modificacion: dilluns, 31 de març de 2025, 14:40:43
+  Ultima Modificacion: dimarts, 1 d’abril de 2025, 12:22:19
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -15,14 +15,14 @@
 #define EAN 1 //eventos antes (array)
 #define EDS 2 //eventos despues (array)
 
-static Evento evento[EVENTOS];
+static Evento eventos[EVENTOS];
 
 static Array aev[3];
 
 static void evinit() {
-	Evento* ptr=evento;
-	while(ptr!=evento+EVENTOS) {
-		ptr->id=ptr-evento;
+	Evento* ptr=eventos;
+	while(ptr!=eventos+EVENTOS) {
+		ptr->id=ptr-eventos;
 		ptr->tipo=0;
 		ptr->activo=true;
 		ptr++;
@@ -36,7 +36,7 @@ static Evento* evfget(u1 id) {
 		evinit();
 		defined=true;
 	}
-	Evento* e=(evento+id);
+	Evento* e=(eventos+id);
 	if(e->tipo!=0) e=NULL;
 	return e;
 }
@@ -48,7 +48,7 @@ static void aep(u1 t,u1 id) {
 static void aee(u1 id) {
 	for(u1 k=0;k<3;k++) {
 		u1 pos=0;
-		if(arrfnd(aev+k,id,&pos)) {
+		if(arrfnd(*(aev+k),id,&pos)) {
 			arrera(aev+k,pos);
 			break;
 		}
@@ -62,7 +62,7 @@ Evento* evunew(u1 id,u1 o1,u1 o2,Actuacion a) {
 		e->objeto[0]=o1;
 		e->objeto[1]=o2;
 		e->actuacion=a;
-		aep(USAR,id);
+		aep(EUS,id);
 	}
 	return e;
 }
@@ -78,11 +78,11 @@ static Evento* evnnew(u1 id,u1 t,Actuacion a) {
 }
 
 Evento* evanew(u1 id,Actuacion a) {
-	return evnnew(id,ANTES,a);
+	return evnnew(id,EAN,a);
 }
 
 Evento* evdnew(u1 id,Actuacion a) {
-	return evnnew(id,DESPUES,a);
+	return evnnew(id,EDS,a);
 }
 
 void evndel(u1 id) {
@@ -99,22 +99,26 @@ Evento* eveget(u1 id) {
 	else return NULL;
 }
 
-void usachk(u1 o1,u1 o2) {
+bool usachk(u1 o1,u1 o2) {
+	u1 ret=false;
 	for(u1 k=0;k<aev[EUS].size;k++) {
 		u1 id=arrget(aev[EUS],k);
 		Evento* e=eveget(id);
 		if((e->objeto[0]==o1 && e->objeto[1]==o2) || (e->objeto[0]==o2 && e->objeto[1]==o1)) {
-			e->actuacion(id);
+			ret |= e->actuacion(id);
 		}
 	}
+	return ret;
 }
 
-void evachk() {
+bool evachk() {
+	bool ret=true;
 	for(u1 k=0;k<aev[EAN].size;k++) {
 		u1 id=arrget(aev[EAN],k);
 		Evento* e=eveget(id);
-		e->actuacion(id);
+		ret &= e->actuacion(id);
 	}
+	return ret;
 }
 		
 void evdchk() {

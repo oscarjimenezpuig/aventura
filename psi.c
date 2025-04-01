@@ -2,7 +2,7 @@
 ============================================================
   Fichero: psi.c
   Creado: 18-03-2025
-  Ultima Modificacion: diumenge, 30 de març de 2025, 11:11:46
+  Ultima Modificacion: dimarts, 1 d’abril de 2025, 12:29:33
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -482,6 +482,58 @@ bool psiinv(u1 psi) {
 				outnl(1);
 			}
 		}
+	}
+	return false;
+}
+
+static u1 obvisxnom(Objeto* psi,char* obj) {
+	Objeto* loc=objget(psi->contenedor);
+	if(loc) {
+		for (u1 n=0;n<2;n++) {
+			Array a=(n==0)?psi->contenido:loc->contenido;
+			for(u1 k=0;k<a.size;k++) {
+				u1 noc=arrget(a,k);
+				if(noc && noc!=psi->id) {
+					Objeto* onoc=objget(noc);
+					if(cadequ(onoc->nombre,obj,true)) {
+						return noc;
+					}
+				}
+			}
+		}
+	}
+	return 0;
+}
+
+bool psiusa(u1 psi,char* oa,char* ob) {
+	Objeto* opsi=objget(psi);
+	if(opsi) {
+		u1 noa,nob;
+		noa=nob=0;
+		for(u1 k=0;k<2;k++) {
+			char* oe=(k==0)?oa:ob;
+			if(*oe!='\0') {
+				u1 noe=0;
+				if((noe=obvisxnom(opsi,oe))) {
+					printf("objeto visto=%i\n",noe);//dbg
+					if(noe==0) {
+						if(isju(psi)) {
+							out("No puedo ver %s...",oe);
+							outnl(1);
+						}
+						return false;
+					} else {
+						if(k==0) noa=noe;
+						else nob=noe;
+					}
+				}
+			}
+		}
+		if(!usachk(noa,nob) && isju(psi)) {
+			out("Nada sucede...");
+			outnl(1);
+		}
+		return true;
 	}
 	return false;
 }

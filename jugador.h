@@ -2,7 +2,7 @@
 ============================================================
   Fichero: jugador.h
   Creado: 19-03-2025
-  Ultima Modificacion: dissabte, 29 de març de 2025, 20:59:07
+  Ultima Modificacion: dimarts, 1 d’abril de 2025, 08:00:14
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -16,4 +16,7 @@ bool jugnew(u1 id);
 
 bool jugact();
 //se realizan y analizan acciones
+
+bool juglst(u1* orden,char* complemento_1,char* complemento_2);
+//obtiene el ultimo token valido introducido por el jugador
 

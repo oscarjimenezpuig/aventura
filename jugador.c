@@ -2,20 +2,22 @@
 ============================================================
   Fichero: jugador.c
   Creado: 19-03-2025
-  Ultima Modificacion: diumenge, 30 de març de 2025, 09:25:24
+  Ultima Modificacion: dimarts, 1 d’abril de 2025, 12:11:23
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
 
 #include "jugador.h"
 
-static Objeto* ojug=NULL;
-static u1 idjug=0;
-
 typedef struct {
 	u1 orden;
 	Cadena complemento[2];
 } Token;
+
+static Token lsttok={0};
+static Objeto* ojug=NULL;
+static u1 idjug=0;
+
 
 static Token toknew() {
 	return (Token){0,{"",""}};
@@ -99,6 +101,8 @@ static bool actsep(Token tok) {
 			return psihui(idjug);
 		case AEXAMINAR:
 			return psiexa(idjug,tok.complemento[0]);
+		case AUSAR:
+			return psiusa(idjug,tok.complemento[0],tok.complemento[1]);
 		case AFINALIZAR:
 			finset(FINQUIT);
 			return true;
@@ -129,7 +133,12 @@ bool jugact() {
 					for(u1 k=0;k<tokens-1;k++) {
 						cadcpy(tok.complemento[k],token[k+1]);
 					}
-					ok=actsep(tok);
+					lsttok=tok;
+					if(evachk()) { //chequeo de eventos antes
+						if((ok=actsep(tok))) {
+							evdchk(); //chequeo de eventos despues
+						}
+					} else ok=true;
 				} else {
 					out("No entiendo...");
 				}
@@ -138,4 +147,14 @@ bool jugact() {
 		}
 	}
 	return ok;	
+}
+
+bool juglst(u1* o,char* c1,char* c2) {
+	if(lsttok.orden!=0) {
+		*o=lsttok.orden;
+		cadcpy(c1,lsttok.complemento[0]);
+		cadcpy(c2,lsttok.complemento[1]);
+		return true;
+	}
+	return false;
 }
