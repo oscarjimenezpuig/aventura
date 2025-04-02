@@ -2,7 +2,7 @@
 ============================================================
   Fichero: psi.c
   Creado: 18-03-2025
-  Ultima Modificacion: dimarts, 1 d’abril de 2025, 12:29:33
+  Ultima Modificacion: dimecres, 2 d’abril de 2025, 13:23:32
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -513,19 +513,16 @@ bool psiusa(u1 psi,char* oa,char* ob) {
 		for(u1 k=0;k<2;k++) {
 			char* oe=(k==0)?oa:ob;
 			if(*oe!='\0') {
-				u1 noe=0;
-				if((noe=obvisxnom(opsi,oe))) {
-					printf("objeto visto=%i\n",noe);//dbg
-					if(noe==0) {
-						if(isju(psi)) {
-							out("No puedo ver %s...",oe);
-							outnl(1);
-						}
-						return false;
-					} else {
-						if(k==0) noa=noe;
-						else nob=noe;
+				u1 noe=obvisxnom(opsi,oe);
+				if(noe==0) {
+					if(isju(psi)) {
+						out("No puedo ver %s...",oe);
+						outnl(1);
 					}
+					return false;
+				} else {
+					if(k==0) noa=noe;
+					else nob=noe;
 				}
 			}
 		}

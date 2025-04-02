@@ -2,7 +2,7 @@
 ============================================================
   Fichero: psi.h
   Creado: 18-03-2025
-  Ultima Modificacion: dimarts, 1 d’abril de 2025, 12:11:23
+  Ultima Modificacion: dimecres, 2 d’abril de 2025, 13:29:01
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -14,6 +14,9 @@ bool psinew(u1 id,char* nombre,char* descripcion,bool jugador,bool amigo,u1 ataq
 
 u1 psijug(); 
 // da el identificador del jugador
+
+Array psivis(u1 psi);
+// se da todo lo que es visible para un psi
 
 bool psimov(u1 psi,u1 accion_direccion);
 // mover el psi que esta en una localidad

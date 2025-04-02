@@ -2,14 +2,14 @@
 ============================================================
   Fichero: jugador.h
   Creado: 19-03-2025
-  Ultima Modificacion: dimarts, 1 d’abril de 2025, 08:00:14
+  Ultima Modificacion: dimecres, 2 d’abril de 2025, 13:24:19
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
 
 #include "ia.h"
 
-#define TPI 10 //numero total de puntos a repartir al inicio
+#define TPI MAXFEAT //numero total de puntos a repartir al inicio
 
 bool jugnew(u1 id);
 //se define un nuevo jugador

@@ -2,7 +2,7 @@
 ============================================================
   Fichero: objeto.h
   Creado: 16-03-2025
-  Ultima Modificacion: dilluns, 31 de març de 2025, 10:41:35
+  Ultima Modificacion: dimecres, 2 d’abril de 2025, 13:29:01
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -46,6 +46,7 @@ typedef struct {
 		};
 		struct { //item
 			bool cogible;
+			bool cerrada; //si es cerrada, actua como caja
 			u1 plus;
 		};
 		
