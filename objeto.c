@@ -2,7 +2,7 @@
 ============================================================
   Fichero: objeto.c
   Creado: 16-03-2025
-  Ultima Modificacion: diumenge, 30 de març de 2025, 11:08:55
+  Ultima Modificacion: dijous, 3 d’abril de 2025, 11:12:29
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -78,6 +78,17 @@ Array objsel(Condicion c) {
 		id++;
 	}
 	return a;
+}
+
+Array objcon(Array a,Condicion c) {
+	Array res=arrnew();
+	for(u1 k=0;k<a.size;k++) {
+		u1 o=arrget(a,k);
+		if(c(o)) {
+			arrpsh(&res,o);
+		}
+	}
+	return res;
 }
 
 static void locprt(Objeto* o) {

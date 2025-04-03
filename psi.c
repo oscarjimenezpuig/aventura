@@ -2,7 +2,7 @@
 ============================================================
   Fichero: psi.c
   Creado: 18-03-2025
-  Ultima Modificacion: dimecres, 2 d’abril de 2025, 13:23:32
+  Ultima Modificacion: dijous, 3 d’abril de 2025, 11:31:05
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -33,6 +33,34 @@ bool psinew(u1 i,char* n,char* d,bool j,bool f,u1 a,u1 s,u1 c,IA ia) {
 
 u1 psijug() {
 	return idjugador;
+}
+
+static void objvis(Array* destino,u1 nobjeto) {
+	arrpsh(destino,nobjeto);
+	Objeto* obj=objget(nobjeto);
+	if(obj->tipo==ITEM && !obj->cerrada) {
+		for(u1 k=0;k<obj->contenido.size;k++) {
+			objvis(destino,arrget(obj->contenido,k));
+		}
+	}
+}
+
+Array psivis(u1 psi) {
+	Array vis=arrnew();
+	Objeto* opsi=objget(psi);
+	Objeto* oloc=(opsi)?objget(opsi->contenedor):NULL;
+	if(oloc) {
+		for(u1 k=0;k<opsi->contenido.size;k++) {
+			objvis(&vis,arrget(opsi->contenido,k));
+		}
+		for(u1 k=0;k<oloc->contenido.size;k++) {
+			u1 noe=arrget(oloc->contenido,k);
+			if(noe!=psi) {
+				objvis(&vis,noe);
+			}
+		}
+	}
+	return vis;
 }
 
 #define isju(A) ((A)==idjugador)
@@ -74,37 +102,46 @@ bool psimov(u1 psi,u1 adir) {
 	return false;
 }
 
-static Objeto* conxnom(Objeto* contenedor,char* nombre) {
-	//busca los objetos de un contenedor por nombre
-	for(u1 k=0;k<contenedor->contenido.size;k++) {
-		u1 nobj=contenedor->contenido.data[k];
-		Objeto* obj=objget(nobj);
-		if(cadequ(nombre,obj->nombre,true)) {
-			return obj;
-		}
-	}
-	return NULL;
+static char* nomus;
+
+static bool condnom(u1 nobj) {
+	Objeto* obj=objget(nobj);
+	if(obj && cadequ(nomus,obj->nombre,true)) return 1;
+	return 0;
+}
+
+u1 objvisnom(u1 psi,char* nombre) {
+	nomus=nombre;
+	Array visto=psivis(psi);
+	Array res=objcon(visto,condnom);
+	if(res.size) return arrget(res,0);
+	else return 0;
 }
 
 bool psicog(u1 psi,char* nombre_objeto) {
 	char* men[]={	"Lo cojo",
 					"No puedo coger nada mas...",
 					"No veo eso...",
-					"Eso no lo puedo coger..."
+					"Eso no lo puedo coger...",
+					"Ya lo tengo..."
 	};
 	u1 ret=0;
 	Objeto* opsi=objget(psi);
 	if(opsi) {
 		if(opsi->contenido.size<opsi->capacidad) {
 			Objeto* localidad=objget(opsi->contenedor);
-			Objeto* objeto=conxnom(localidad,nombre_objeto);
+			Objeto* objeto=objget(objvisnom(psi,nombre_objeto));
 			if(objeto) {
 				if(objeto->tipo==ITEM && objeto->cogible) {
-					objexp(objeto->id);
-					objins(psi,objeto->id);
-					if(juin(psi,localidad->id)) {
-						out("%s coge %s...",opsi->nombre,nombre_objeto);
-						outnl(1);
+					if(objeto->contenedor==psi) {
+						ret=4;
+					} else {
+						objexp(objeto->id);
+						objins(psi,objeto->id);
+						if(juin(psi,localidad->id)) {
+							out("%s coge %s...",opsi->nombre,nombre_objeto);
+							outnl(1);
+						}
 					}
 				} else ret=3;
 			} else ret=2;
@@ -486,25 +523,6 @@ bool psiinv(u1 psi) {
 	return false;
 }
 
-static u1 obvisxnom(Objeto* psi,char* obj) {
-	Objeto* loc=objget(psi->contenedor);
-	if(loc) {
-		for (u1 n=0;n<2;n++) {
-			Array a=(n==0)?psi->contenido:loc->contenido;
-			for(u1 k=0;k<a.size;k++) {
-				u1 noc=arrget(a,k);
-				if(noc && noc!=psi->id) {
-					Objeto* onoc=objget(noc);
-					if(cadequ(onoc->nombre,obj,true)) {
-						return noc;
-					}
-				}
-			}
-		}
-	}
-	return 0;
-}
-
 bool psiusa(u1 psi,char* oa,char* ob) {
 	Objeto* opsi=objget(psi);
 	if(opsi) {
@@ -513,7 +531,7 @@ bool psiusa(u1 psi,char* oa,char* ob) {
 		for(u1 k=0;k<2;k++) {
 			char* oe=(k==0)?oa:ob;
 			if(*oe!='\0') {
-				u1 noe=obvisxnom(opsi,oe);
+				u1 noe=objvisnom(psi,oe);
 				if(noe==0) {
 					if(isju(psi)) {
 						out("No puedo ver %s...",oe);

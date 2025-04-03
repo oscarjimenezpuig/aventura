@@ -2,7 +2,7 @@
 ============================================================
   Fichero: objeto.h
   Creado: 16-03-2025
-  Ultima Modificacion: dimecres, 2 d’abril de 2025, 13:29:01
+  Ultima Modificacion: dijous, 3 d’abril de 2025, 11:05:54
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -69,6 +69,9 @@ bool objexp(u1 objeto);
 
 Array objsel(Condicion condicion);
 //un array de idientificadores de los objetos que cumplen una determinada condicion
+
+Array objcon(Array array, Condicion condicion);
+//un array de identificadores de los objetos de un array que cumplen la condicion
 
 void objprt(u1 id);
 //imprime un objeto segun el tipo que sea
