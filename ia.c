@@ -2,7 +2,7 @@
 ============================================================
   Fichero: ia.c
   Creado: 29-03-2025
-  Ultima Modificacion: diumenge, 30 de març de 2025, 11:17:16
+  Ultima Modificacion: divendres, 4 d’abril de 2025, 11:25:03
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -149,7 +149,7 @@ static Array hayene(Objeto* psi) {
 	if(oloc) {
 		for(u1 k=0;k<oloc->contenido.size;k++) {
 			Objeto* oe=objget(arrget(oloc->contenido,k));
-			if(oe && oe->tipo==PSI && oe->amigo!=psi->amigo) {
+			if(oe && oe->tipo==PSI && oe->amigo!=psi->amigo && !oe->muerto) {
 				arrpsh(&ene,oe->id);
 			}
 		}

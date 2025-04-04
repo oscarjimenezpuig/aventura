@@ -2,7 +2,7 @@
 ============================================================
   Fichero: psi.c
   Creado: 18-03-2025
-  Ultima Modificacion: dijous, 3 d’abril de 2025, 11:31:05
+  Ultima Modificacion: divendres, 4 d’abril de 2025, 11:08:44
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -163,8 +163,8 @@ bool psidej(u1 psi,char* nombre_objeto) {
 	Objeto* opsi=objget(psi);
 	Objeto* olocalidad=objget(opsi->contenedor);
 	if(opsi && olocalidad) {
-		Objeto* objeto=conxnom(opsi,nombre_objeto);
-		if(objeto) {
+		Objeto* objeto=objget(objvisnom(psi,nombre_objeto));
+		if(objeto && objeto->contenedor==psi) {
 			objexp(objeto->id);
 			objins(olocalidad->id,objeto->id);
 			if(juin(psi,olocalidad->id)) {
@@ -223,9 +223,9 @@ bool psient(u1 psi,char* no) {
 	if(opsi) {
 		Objeto* oloc=(opsi)?objget(opsi->contenedor):NULL;
 		if(oloc) {
-			Objeto* entrada=conxnom(oloc,no);
+			Objeto* entrada=objget(objvisnom(psi,no));
 			if(entrada) {
-				if(entrada->tipo==LOCALIDAD) {
+				if(entrada->tipo==LOCALIDAD && entrada->contenedor!=psi) {
 					objexp(psi);
 					objins(entrada->id,psi);
 					if(juin(psi,oloc->id)) {
@@ -320,7 +320,7 @@ bool psiata(u1 psi,char* np) {
 	Objeto* opsi=objget(psi);
 	Objeto* psiloc=(opsi)?objget(opsi->contenedor):NULL;
 	if(psiloc) {
-		Objeto* riv=conxnom(psiloc,np);
+		Objeto* riv=objget(objvisnom(psi,np));
 		if(riv) {
 			if(riv->tipo==PSI) {
 				if(ojug==opsi) {
@@ -491,8 +491,7 @@ bool psiexa(u1 psi,char* nombre) {
 		Objeto* opsi=objget(psi);
 		Objeto* oloc=(opsi)?objget(opsi->contenedor):NULL;
 		if(oloc) {
-			Objeto* oex=conxnom(opsi,nombre);
-			if(!oex) oex=conxnom(oloc,nombre);
+			Objeto* oex=objget(objvisnom(psi,nombre));
 			if(!oex) {
 				out("No veo eso...");
 			} else {

@@ -2,7 +2,7 @@
 ============================================================
   Fichero: juego.c
   Creado: 20-03-2025
-  Ultima Modificacion: dimarts, 1 d’abril de 2025, 12:19:31
+  Ultima Modificacion: divendres, 4 d’abril de 2025, 11:18:06
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -24,12 +24,16 @@ static void mapa_inicia() {
 
 #define PAN ITMID
 #define ESCUDO (PAN+1)
+#define CAJA (ESCUDO+1)
 
 static void items_inicia() {
-	if(itmnew(PAN,"Pan","deliciosa y crujiente",true,0)) {
-		objins(3,PAN);
+	if(itmnew(CAJA,"Caja","de carton viejo...",true,false,0)) {
+		objins(3,CAJA);
 	}
-	itmnew(ESCUDO,"Escudo","un escudo antiguo y duradero",true,5);
+	if(itmnew(PAN,"Pan","deliciosa y crujiente",true,false,0)) {
+		objins(CAJA,PAN);
+	}
+	itmnew(ESCUDO,"Escudo","un escudo antiguo y duradero",true,false,5);
 }
 
 #define TALON PSIID

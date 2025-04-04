@@ -2,7 +2,7 @@
 ============================================================
   Fichero: objeto.c
   Creado: 16-03-2025
-  Ultima Modificacion: dijous, 3 d’abril de 2025, 11:12:29
+  Ultima Modificacion: divendres, 4 d’abril de 2025, 11:16:18
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -149,6 +149,7 @@ static void locprt(Objeto* o) {
 		if(conloc) {
 			outtb(1);
 			out("-Salida a %s",conloc->nombre);
+			outnl(1);
 		}
 		for(u1 k=0;k<otr.size;k++) {
 			outtb(1);
@@ -217,6 +218,13 @@ static void itemprt(Objeto* o) {
 	}
 	if(o->plus) {
 		out("Es un arma (+%hhu).",o->plus);
+	}
+	if(o->cerrada) out("Esta cerrado.");
+	else if(o->contenido.size) {
+		out("En su interior puedes ver: ");
+		for(u1 k=0;k<o->contenido.size;k++) {
+			out("%s ",objget(arrget(o->contenido,k))->nombre);
+		}
 	}
 	outnl(1);
 }

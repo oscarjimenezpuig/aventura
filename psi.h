@@ -2,7 +2,7 @@
 ============================================================
   Fichero: psi.h
   Creado: 18-03-2025
-  Ultima Modificacion: dimecres, 2 d’abril de 2025, 13:29:01
+  Ultima Modificacion: dijous, 3 d’abril de 2025, 14:33:22
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -64,4 +64,4 @@ bool psiact(u1 psi);
 void pssact();
 // accion de todos los psis del juego que tienen ia
 
-
+//TODO Correccion de coger, dejar usar y otro mas que necesite la visualizacion
