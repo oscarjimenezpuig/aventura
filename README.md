@@ -5,3 +5,4 @@
 31/3/25 Mirar los eventos antes y despues, quizas no son necesarios.
 1/4/25 La funcion usar no funciona correctamente (Resuelto)
 2/4/25 Acabar la funcion visible (objetos en la localidad, contenidos en uno mismo y en objetos no cerrados)
+10/4/25 Unificados todos los archivos. Pendientes de eliminacion los separados y de finalizar addons.
