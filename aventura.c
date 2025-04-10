@@ -2,17 +2,12 @@
 ============================================================
   Fichero: aventura.c
   Creado: 07-04-2025
-  Ultima Modificacion: dimarts, 8 d’abril de 2025, 12:01:13
+  Ultima Modificacion: dijous, 10 d’abril de 2025, 11:03:18
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
 
 // INCLUDES
-
-#include <stdlib.h>
-#include <time.h>
-#include <stdio.h>
-#include <stdarg.h>
 
 #include "aventura.h"
 
@@ -58,25 +53,9 @@ static Objeto* ojugador=NULL;
 static int turno=1;
 static u1 finval=0;
 static bool finis=false;
+static bool aquienemigo=false;
 
 // PROTOTIPOS FUNCION
-
-int rnd(int a,int b);
-
-char* in(Cadena cadena);
-//entrada teclado
-
-void out(const char* cadena,...);
-//impresion formateada
-
-void outnl(u1 lines);
-// nueva linea */
-
-void outtb(u1 tab);
-// tabulacion, a base de espacios */
-
-void outat(Atributo a);
-// attributos de escritura */
 
 void cadcpy(Cadena d,char* o);
 // copia un string en una cadena */
@@ -89,18 +68,6 @@ bool cadsep(Cadena d,char** f,char separador);
 
 u1 cadlen(char* c);
 // da la longitud de la cadena */
-
-void flgon(u1 flag);
-//cpmecta bandera
-
-void flgoff(u1 flag);
-//desconecta bandera
-
-void flgnot(u1 flag);
-//hace la inversa del valor de la bandera
-
-bool flgion(u1 flag);
-//mira si la bandera esta conectada
 
 Array arrnew();
 //nuevo array de enteros
@@ -132,15 +99,6 @@ void arrprt(Array array);
 Objeto* objnew(u1 id,u1 tipo,char* nombre);
 //define un nuevo objeto (el identificador 0 reservado para la localidad universo)2
 
-Objeto* objget(u1 id);
-//consigue el obejeto con identificador dado
-
-bool objins(u1 receptor,u1 objeto);
-//inserta un objeto en otro (siempre y cuando el objeto no este contenido en ningun sitio)
-
-bool objexp(u1 objeto);
-//quita el objeto de un contenedor
-
 Array objsel(Condicion condicion);
 //un array de idientificadores de los objetos que cumplen una determinada condicion
 
@@ -149,21 +107,6 @@ Array objcon(Array array, Condicion condicion);
 
 void objprt(u1 id);
 //imprime un objeto segun el tipo que sea
-
-Evento* evunew(u1 id,u1 objeto_1,u1 objeto_2,Actuacion actuacion);
-//definicion de una accion usar (solo si id esta vacio)
-
-Evento* evanew(u1 id,Actuacion actuacion);
-//definicion de un evento antes (solo si id esta vacio)
-
-Evento* evdnew(u1 id,Actuacion actuacion);
-//definicion de un evento despues (solo si id esta vacio)
-
-void evndel(u1 id);
-//borrado de un evento
-
-Evento* eveget(u1 id);
-//apuntador al evento
 
 bool usachk(u1 objeto_1,u1 objeto_2);
 //chequea todos los eventos usar donde esten implicados objeto_1 y objeto_2
@@ -174,20 +117,8 @@ bool evachk();
 void evdchk();
 //chequea todos los eventos despues
 
-bool locnew(u1 id,char* nombre,char* descripcion);
-//nueva localidad
-
-bool loccon(u1 origen,u1 destino,u1 salida,bool bidireccional);
-//conecta dos localidades por una salida (bidireccional si hay que hacerlo en las dos direcciones)
-
 u1 accfnd(char* cadena);
 //busca una accion del deposito de acciones
-
-bool itmnew(u1 id,char* nombre,char* descripcion,bool cogible,bool cerrada,u1 plus);
-//definimos un item nuevo
-
-bool psinew(u1 id,char* nombre,char* descripcion,bool jugador,bool amigo,u1 ataque,u1 destreza,u1 capacidad,IA ia);
-// define un nuevo psi
 
 Array psivis(u1 psi);
 // se da todo lo que es visible para un psi
@@ -232,11 +163,11 @@ bool psiusa(u1 psi,char* objeto_1,char* objeto_2);
 //usar, solo para el personaje jugador, es necesario para usar, que los dos objetos esten visibles
 //o sean poseidos
 
+bool psistt(u1 psi);
+//da el status, solo para el personaje jugador
+
 bool psiact(u1 psi);
 // accion de psi que posee ia
-
-void pssact();
-// accion de todos los psis del juego que tienen ia
 
 bool iamov(u1 psi);
 //ia para permitir el movimiento de un psi
@@ -253,44 +184,8 @@ bool iadsc(u1 psi);
 bool iaatd(u1 psi);
 //io para atacar o huir
 
-bool IAhum(u1 psi);
-//ia completa de un psi humanoide
-
-bool IAani(u1 psi);
-//ia de un animal (no coge ni deja objetos)
-
-bool IApln(u1 psi);
-//ia de una planta (no se mueve, no coge ni deja objetos);
-
-bool jugnew(u1 id);
-//se define un nuevo jugador
-
-bool jugact();
-//se realizan y analizan acciones
-
 bool juglst(u1* orden,char* complemento_1,char* complemento_2);
 //obtiene el ultimo token valido introducido por el jugador
-
-int trnget();
-// da el valor del turno
-
-void trnpss();
-// incrementa el turno en 1
-
-void trninc(int i);
-// varia el turno en i
-
-void finset(u1 value);
-//pone la señal de final con un valor
-
-bool finget(u1* value);
-//da true si hay final
-
-void finfinprt();
-//da el final total con el tanto por ciento de mapa visitado y la palabra fin
-
-void visscr();
-// visibiliza la pantalla
 
 //DEFINICION DE FUNCIONES
 
@@ -600,6 +495,7 @@ static void locprt(Objeto* o) {
 		}
 	}
 	if(ene.size) {
+		aquienemigo=true;
 		out("Atencion, enemigos en esta localidad...");
 		outnl(1);
 		outtb(1);
@@ -610,7 +506,7 @@ static void locprt(Objeto* o) {
 				outnl(1);
 			}
 		}
-	}
+	} else aquienemigo=false;
 	if(ami.size) {
 		out("Tienes amigos aqui...");
 		outnl(1);
@@ -892,7 +788,8 @@ static void accdef() {
 	accnew(16,"nada");
 	accnew(17,"examinar");
 	accins(17,"ex");
-	accins(18,"fin");
+	accnew(18,"status");
+	accins(19,"fin");
 }
 
 u1 accfnd(char* a) {
@@ -1457,6 +1354,25 @@ bool psiusa(u1 psi,char* oa,char* ob) {
 	return false;
 }
 
+bool psistt(u1 psi) {
+	char* svida[]={	"muy malo",
+					"malo",
+					"regular",
+					"bueno",
+					"muy bueno"
+	};
+	Objeto* opsi=objget(psi);
+	if(opsi && opsi->jugador) {
+		out("%s, tus caracteristicas son AT:%i y HB:%i. Llevas %i objetos de %i posibles.",opsi->nombre,opsi->ataque,opsi->destreza,opsi->contenido.size,opsi->capacidad);
+		outnl(1);
+		u1 v=opsi->vida;
+		u1 c=(v<2)?0:(v<4)?1:(v<6)?2:(v<8)?3:4;
+		out("Tu estado de salud es %s.",svida[c]);
+		outnl(1);
+	}
+	return false;
+}
+
 bool psiact(u1 psi) {
 	Objeto* opsi=objget(psi);
 	if(opsi && opsi->tipo==PSI && !opsi->muerto && opsi->ia) {
@@ -1756,7 +1672,31 @@ static u1 separa(Cadena orden,Cadena* frase) {
 	return palabras;
 }
 
+static bool atncene() {
+	out("No puedes, aqui hay enemigos...");
+	outnl(1);
+	return false;
+}
+
 static bool actsep(Token tok) {
+	if(aquienemigo) {
+		switch(tok.orden) {
+			case AATACAR:
+				return psiata(idjugador,tok.complemento[0]);
+			case AHUIR:
+				return psihui(idjugador);
+			case AEXAMINAR:
+				return psiexa(idjugador,tok.complemento[0]);
+			case AUSAR:
+				return psiusa(idjugador,tok.complemento[0],tok.complemento[1]);
+			case ASTATUS:
+				return psistt(idjugador);
+			case AFINALIZAR:
+				finset(FINQUIT);
+			default:
+				return atncene();
+		}
+	}						
 	switch(tok.orden) {
 		case ANORTE:
 		case ASUR:
@@ -1785,6 +1725,8 @@ static bool actsep(Token tok) {
 			return psiexa(idjugador,tok.complemento[0]);
 		case AUSAR:
 			return psiusa(idjugador,tok.complemento[0],tok.complemento[1]);
+		case ASTATUS:
+			return psistt(idjugador);
 		case AFINALIZAR:
 			finset(FINQUIT);
 			return true;
@@ -1849,10 +1791,6 @@ void trnpss() {
 	++turno;
 }
 
-void trninc(int i) {
-	turno+=i;
-}
-
 void finset(u1 v) {
 	finval=v;
 	finis=true;
@@ -1905,13 +1843,3 @@ void visscr() {
 		outnl(1);
 	}
 }
-
-//prueba
-
-int main() {
-	return 0;
-}
-
-
-
-
