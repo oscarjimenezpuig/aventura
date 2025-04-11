@@ -2,7 +2,7 @@
 ============================================================
   Fichero: juego.c
   Creado: 20-03-2025
-  Ultima Modificacion: divendres, 4 d’abril de 2025, 11:18:06
+  Ultima Modificacion: divendres, 11 d’abril de 2025, 11:24:12
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -10,16 +10,13 @@
 #include "juego.h"
 
 static void mapa_inicia() {
-	locnew(1,"Prado","Un bonito y verde prado.");
-	locnew(2,"Riachuelo","Un riachuelo que circula entre arbustos.");
-	locnew(3,"Bosque","Un bosque con cuatro pinos");
-	loccon(1,2,NORTE,true);
-	loccon(2,3,ESTE,true);
-	loccon(3,1,SUR,false);
-	locnew(4,"Caverna","Una gran caverna llena de estalagtitas");
-	locnew(5,"Pasillo","Un pequeño pasillo muy oscuro");
-	objins(3,4);
-	loccon(4,5,SUR,true);
+	Laberinto l={	"Mazmorra",
+					"Oscura y humeda, huele muy mal...",
+					1,3,3,3,1,
+					true,true
+	};
+	Laberinth(l);
+	Newline;
 }
 
 #define PAN ITMID
@@ -28,7 +25,7 @@ static void mapa_inicia() {
 
 static void items_inicia() {
 	if(itmnew(CAJA,"Caja","de carton viejo...",true,false,0)) {
-		objins(3,CAJA);
+		objins(rnd(1,27),CAJA);
 	}
 	if(itmnew(PAN,"Pan","deliciosa y crujiente",true,false,0)) {
 		objins(CAJA,PAN);
@@ -41,10 +38,10 @@ static void items_inicia() {
 
 static void npis_inicia() {
 	psinew(TALON,"Talon","guapo y bello",false,true,5,3,1,IAhum);
-	objins(2,TALON);
+	objins(rnd(1,27),TALON);
 	objins(TALON,ESCUDO);
 	psinew(OGRO,"Ogro","muy feo y con mocos",false,false,7,7,3,IAhum);
-	objins(5,OGRO);
+	objins(rnd(10,27),OGRO);
 }
 
 #define USAPAN 0

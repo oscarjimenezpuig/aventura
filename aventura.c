@@ -2,7 +2,7 @@
 ============================================================
   Fichero: aventura.c
   Creado: 07-04-2025
-  Ultima Modificacion: dijous, 10 d’abril de 2025, 11:03:18
+  Ultima Modificacion: divendres, 11 d’abril de 2025, 11:18:55
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -57,17 +57,8 @@ static bool aquienemigo=false;
 
 // PROTOTIPOS FUNCION
 
-void cadcpy(Cadena d,char* o);
-// copia un string en una cadena */
-
-bool cadequ(char* a,char* b,bool insensitive);
-// mira si dos cadenas son iguales insensitive=true: case insensitive*/
-
 bool cadsep(Cadena d,char** f,char separador);
 // separa f y obtiene la primera palabra diferente al vacio, responde true si encuentra palabra*/
-
-u1 cadlen(char* c);
-// da la longitud de la cadena */
 
 Array arrnew();
 //nuevo array de enteros
@@ -287,6 +278,16 @@ u1 cadlen(char* c) {
 	char* ptrc=c;
 	while(*ptrc!='\0') ptrc++;
 	return (u1)(ptrc-c);
+}
+
+void cadadd(Cadena d,char* a) {
+	char* ptr=d;
+	while(*ptr!='\0') ptr++;
+	char* ptra=a;
+	while(*ptra!='\0') {
+		*ptr++=*ptra++;
+	}
+	*ptr='\0';
 }
 
 static void flginit() {

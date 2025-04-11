@@ -2,7 +2,7 @@
 ============================================================
   Fichero: avadds.c
   Creado: 10-04-2025
-  Ultima Modificacion: dijous, 10 d’abril de 2025, 11:44:40
+  Ultima Modificacion: divendres, 11 d’abril de 2025, 11:24:28
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -99,29 +99,127 @@ static void labprt() {
 	}
 }
 
-static labtoplan(u1 level,u1 x,u1 y) {
-	u1 id=actual.idini+x+y*actual.w + l*actual.w*actual.h;
-	
+static u1 getid(u1 level,u1 x,u1 y) {
+	return actual.idini+x+y*actual.w + level*actual.w*actual.h;
+}
 
+static void move(u1 dir,int x,int y,int* dx,int* dy) {
+	switch(dir) {
+		case DN:
+			--y;
+			break;
+		case DS:
+			++y;
+			break;
+		case DE:
+			--x;
+			break;
+		case DW:
+			++x;
+			break;
+	}
+	*dx=x;
+	*dy=y;
+}
+
+static u1 altsal(u1 sal) {
+	switch(sal) {
+		case DN:
+			return NORTE;
+		case DS:
+			return SUR;
+		case DE:
+			return ESTE;
+		default:
+			return OESTE;
+	}
+}
+
+static void labtoplan(u1 level,u1 x,u1 y) {
+	Habitacion* r=romget(x,y);
+	int dx,dy;
+	for(u1 dir=DN;dir<=DW;dir=dir<<1) {
+		if(r->salidas & dir) {
+			move(dir,x,y,&dx,&dy);
+			loccon(getid(level,x,y),getid(level,dx,dy),altsal(dir),true);
+		}
+	}
+}
 
 static void plantabuilt(u1 level) {
 	labnew();
 	while(labtry());
-	
+	for(u1 i=0;i<actual.w;i++) {
+		for(u1 j=0;j<actual.h;j++) {
+			labtoplan(level,i,j);
+		}
+	}
 	labdel();
 }
-			
-/* prueba */
 
-int main() {
-	actual.w=4;
-	actual.h=3;
-	planta();
-	return 0;
+static void plantasbuilt() {
+	for(u1 k=0;k<actual.altura;k++) plantabuilt(k);
 }
 
+static void plantajoin(u1 level) {
+	for(u1 k=0;k<actual.escaleras;k++) {
+		Objeto* loin=NULL;
+		Objeto* lofi=NULL;
+		u1 x,y,id;
+		while(!loin) {
+			x=rnd(0,actual.w-1);
+			y=rnd(0,actual.h-1);
+			id=getid(level,x,y);
+			loin=objget(id);
+			if(!loin || loin->salida[ARRIBA]!=0) loin=NULL;
+		}
+		while(!lofi) {
+			x=rnd(0,actual.w-1);
+			y=rnd(0,actual.h-1);
+			id=getid(level+1,x,y);
+			lofi=objget(id);
+			if(!lofi || lofi->salida[ABAJO]!=0) lofi=NULL;
+		}
+		loccon(loin->id,lofi->id,ARRIBA,true);
+	}
+}
 
+static void plantasjoin() {
+	for(u1 l=0;l<actual.altura-1;l++) {
+		plantajoin(l);
+	}
+}
 
+static void habitdef() {
+	u1 number=1;
+	for(u1 l=0;l<actual.altura;l++) {
+		for(u1 i=0;i<actual.w;i++) {
+			for(u1 j=0;j<actual.h;j++) {
+				u1 id=getid(l,i,j);
+				locnew(id,actual.nombre,actual.descripcion);
+				Objeto* oloc=objget(id);
+				if(actual.numnom) {
+					char snumero[30];
+					sprintf(snumero," %i",number);
+					cadadd(oloc->nombre,snumero);
+				}
+				if(actual.levdes) {
+					char snivel[30];
+					sprintf(snivel,"\nEstas en el piso %i.",l+1);
+					cadadd(oloc->descripcion,snivel);
+				}
+				++number;
+			}
+		}
+	}
+}
+
+void labset(Laberinto l) {
+	actual=l;
+	habitdef();
+	plantasbuilt();
+	plantasjoin();
+}
 
 
 

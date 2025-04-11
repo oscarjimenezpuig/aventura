@@ -2,7 +2,7 @@
 ============================================================
   Fichero: aventura.h
   Creado: 07-04-2025
-  Ultima Modificacion: dijous, 10 d’abril de 2025, 11:01:56
+  Ultima Modificacion: divendres, 11 d’abril de 2025, 11:17:00
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -139,6 +139,18 @@ void outtb(u1 tab);
 void outat(Atributo a);
 // attributos de escritura */
 
+void cadcpy(Cadena d,char* o);
+// copia un string en una cadena */
+
+bool cadequ(char* a,char* b,bool insensitive);
+// mira si dos cadenas son iguales insensitive=true: case insensitive*/
+
+u1 cadlen(char* c);
+// da la longitud de la cadena */
+
+void cadadd(Cadena d,char* a);
+//añade a la cadena d, la cadena a.
+
 void flgon(u1 flag);
 //cpmecta bandera
 
@@ -234,6 +246,10 @@ void visscr();
 #define Newline outnl(1)
 #define Tab outtb(1)
 #define Attr outat
+#define Copy cadcpy
+#define Equal cadequ
+#define Len cadlen
+#define Add cadadd
 #define On flgon
 #define Off floff
 #define Not flgnot
