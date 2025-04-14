@@ -2,7 +2,7 @@
 ============================================================
   Fichero: avadds.c
   Creado: 10-04-2025
-  Ultima Modificacion: divendres, 11 d’abril de 2025, 11:24:28
+  Ultima Modificacion: dilluns, 14 d’abril de 2025, 05:58:04
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -89,6 +89,7 @@ static bool labtry() {
 	return res;
 }
 
+/*
 static void labprt() {
 	for(u1 y=0;y<actual.h;y++) {
 		for(u1 x=0;x<actual.w;x++) {
@@ -98,6 +99,7 @@ static void labprt() {
 		printf("\n");
 	}
 }
+*/
 
 static u1 getid(u1 level,u1 x,u1 y) {
 	return actual.idini+x+y*actual.w + level*actual.w*actual.h;
@@ -219,6 +221,81 @@ void labset(Laberinto l) {
 	habitdef();
 	plantasbuilt();
 	plantasjoin();
+}
+
+static u1 rndpos(Zona zona) {
+	static bool todosdef=false;
+	static Array todos;
+	if(zona.todo && !todosdef) {
+		todos=arrnew();
+		for(int k=0;k<256;k++) {
+			Objeto* o=objget(k);
+			if(o && o->tipo==LOCALIDAD) arrpsh(&todos,k);
+		}
+		todosdef=true;
+	}
+	Array obj=(zona.todo)?todos:zona.localidades;
+	if(obj.size) return arrget(obj,rnd(0,obj.size-1));
+	else return 0;
+}
+
+#define inrnd(I) rnd((I).min,(I).max)
+#define tocap(A) ((A)-'a'+'A')
+
+static bool rndlet(bool vocal) {
+	const u1 VOCS=6;
+	char* VOCA="aeiouy";
+	char FRST='b';
+	char LAST='z';
+	if(vocal) {
+		return VOCA[rnd(0,VOCS-1)];
+	} else {
+		char plet=0;
+		while(!plet) {
+			plet=rnd(FRST,LAST);
+			char* pv=VOCA;
+			while(*pv!='\0' && plet) {
+				if(*pv==plet) plet=0;
+				pv++;
+			}
+		}
+		return plet;
+	}
+}
+
+static void rndname(Cadena nombre,u1 len) {
+	len=(len==0)?1:len;
+	bool tipo=rnd(0,1);
+	u1 k=0;
+	for(;k<len && k<CADLEN;k++) {
+		if(k==0) *nombre=tocap(rndlet(tipo));
+		else nombre[k]=rndlet(tipo);
+		tipo=!tipo;
+	}
+	nombre[k]='\0';
+}
+
+
+
+static bool onemember(u1 id,Raza r) {
+	Cadena nombre;
+	if(r.nombre.nombre) cadcpy(nombre,r.nombre.nombre);
+	else rndname(nombre,inrnd(r.nombre.letras));
+	if(psinew(id,nombre,r.descripcion,false,r.amigo,inrnd(r.ataque),inrnd(r.destreza),inrnd(r.capacidad),r.ia)) {
+		u1 pos=rndpos(r.zona);
+		if(pos) return objins(pos,id);
+	}
+	return false;
+}
+
+
+u1 raznew(Raza r,u1 m) {
+	u1 id=r.idini;
+	bool create=false;
+	do {
+		create=onemember(id,r);
+	} while (create && id-r.idini<m && (++id));
+	return id-r.idini;
 }
 
 

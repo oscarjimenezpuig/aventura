@@ -2,7 +2,7 @@
 ============================================================
   Fichero: avadds.h
   Creado: 10-04-2025
-  Ultima Modificacion: divendres, 11 d’abril de 2025, 11:12:33
+  Ultima Modificacion: dilluns, 14 d’abril de 2025, 05:57:51
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -36,4 +36,39 @@ typedef struct {
 void labset(Laberinto laberinto);
 //construye el laberinto
 
+typedef struct {
+	u1 min,max;
+} Intervalo;
+
+typedef struct {
+	char* nombre;
+	Intervalo letras;
+} Nombre;
+//Si nombre es nulo, se crea un nombre entre el minimo y maximo de letras
+
+typedef struct {
+	bool todo;
+	Array localidades;
+} Zona;
+//si todo es falso, se leen las localidades donde se puede poner todos los elementos
+
+typedef struct {
+	u1 idini;
+	Nombre nombre;
+	char* descripcion;
+	bool amigo;
+	Intervalo ataque,destreza,capacidad;
+	IA ia;
+	Zona zona;
+} Raza;
+
+// idini: primer id que utilizaran 
+// nombre: da un nombre y genera un aleatorio
+// descripcion: descripcion
+// ataque, destreza y vida: intervalo de las caracteristicas
+// ia: ia que tiene
+
+u1 raznew(Raza raza,u1 members);
+
 #define Laberinth labset
+#define Race raznew

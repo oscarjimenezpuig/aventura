@@ -2,7 +2,7 @@
 ============================================================
   Fichero: aventura.c
   Creado: 07-04-2025
-  Ultima Modificacion: divendres, 11 d’abril de 2025, 11:18:55
+  Ultima Modificacion: dilluns, 14 d’abril de 2025, 07:31:19
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -48,7 +48,7 @@ static Array aev[3];
 static Accion acciones[ACCIONES];
 static u1 idjugador=0;
 static char* nomus;
-static Token lsttok={0};
+static Token lsttok={ANADA};
 static Objeto* ojugador=NULL;
 static int turno=1;
 static u1 finval=0;
@@ -59,33 +59,6 @@ static bool aquienemigo=false;
 
 bool cadsep(Cadena d,char** f,char separador);
 // separa f y obtiene la primera palabra diferente al vacio, responde true si encuentra palabra*/
-
-Array arrnew();
-//nuevo array de enteros
-
-u1 arrsiz(Array array);
-//dar el tamaño del array
-
-u1 arrget(Array array,u1 pos);
-//conseguir el valor de una posicion
-
-void arrclr(Array* array);
-//limpiar el array a cero
-
-bool arrpsh(Array* array,u1 value);
-//introducir en la cola un valor
-
-bool arrins(Array* array,u1 size,u1* values);
-//instertar un array de valores
-
-bool arrfnd(Array array,u1 value,u1* pos);
-//buscar un valor
-
-void arrera(Array* array,u1 pos);
-//borrar una posicion
-
-void arrprt(Array array);
-//imprimir todos los valores del array
 
 Objeto* objnew(u1 id,u1 tipo,char* nombre);
 //define un nuevo objeto (el identificador 0 reservado para la localidad universo)2
@@ -156,6 +129,15 @@ bool psiusa(u1 psi,char* objeto_1,char* objeto_2);
 
 bool psistt(u1 psi);
 //da el status, solo para el personaje jugador
+
+bool psihlp(u1 psi);
+//da todas las acciones disponibles (solo para personaje jugador)
+
+bool psimir(u1 psi);
+//mirar, repite la descripcion de la pantalla (solo para personaje jugador)
+
+bool psicanact(u1 psi);
+//da el resultado de si un psi cualquiera puede actuar en un turno determinado
 
 bool psiact(u1 psi);
 // accion de psi que posee ia
@@ -290,6 +272,17 @@ void cadadd(Cadena d,char* a) {
 	*ptr='\0';
 }
 
+void cadcap(Cadena d,char* a) {
+	char* ptrd=d;
+	char* ptra=a;
+	while(*ptra!='\0') {
+		char l=*ptra++;
+		if(l>='a' && l<='z') l=l-'a'+'A';
+		*ptrd++=l;
+	}
+	*ptrd='\0';
+}
+
 static void flginit() {
 	bool* ptr=bandera;
 	while(ptr!=bandera+BANDERAS) {
@@ -411,6 +404,7 @@ Objeto* objnew(u1 i,u1 t,char* n) {
 		cadcpy(o->nombre,n);
 		o->contenedor=0;
 		o->contenido=arrnew();
+		o->oro=0;
 	}
 	return o;
 }
@@ -499,10 +493,10 @@ static void locprt(Objeto* o) {
 		aquienemigo=true;
 		out("Atencion, enemigos en esta localidad...");
 		outnl(1);
-		outtb(1);
 		for(u1 k=0;k<ene.size;k++) {
 			Objeto* oene=objget(arrget(ene,k));
 			if(oene) {
+				outtb(1);
 				out("-%s",oene->nombre);
 				outnl(1);
 			}
@@ -603,6 +597,7 @@ static void itemprt(Objeto* o) {
 			out("%s ",objget(arrget(o->contenido,k))->nombre);
 		}
 	}
+	if(o->oro) out("Es un tesoro de valor %i monedas.",o->oro);
 	outnl(1);
 }
 
@@ -790,7 +785,11 @@ static void accdef() {
 	accnew(17,"examinar");
 	accins(17,"ex");
 	accnew(18,"status");
-	accins(19,"fin");
+	accnew(19,"repetir");
+	accins(19,"rep");
+	accins(20,"ayuda");
+	accins(21,"mirar");
+	accins(22,"fin");
 }
 
 u1 accfnd(char* a) {
@@ -805,13 +804,18 @@ u1 accfnd(char* a) {
 	return ANULL;
 }
 
-bool itmnew(u1 id,char* n,char* d,bool c,bool cr,u1 p) {
+bool itmnew(u1 id,char* n,char* d,bool c,bool cr,u1 p,int oro) {
 	Objeto* o;
 	if((o=objnew(id,ITEM,n))) {
 		if(d) cadcpy(o->descripcion,d);
 		o->cogible=c;
 		o->plus=p;
 		o->cerrada=cr;
+		if(oro) {
+			o->plus=0;
+			o->cerrada=false;
+			o->oro=(oro>0)?oro:-oro;
+		}
 		return true;
 	}
 	return false;
@@ -940,7 +944,12 @@ bool psicog(u1 psi,char* nombre_objeto) {
 						ret=4;
 					} else {
 						objexp(objeto->id);
-						objins(psi,objeto->id);
+						if(psi==idjugador && objeto->oro>0) {
+							out("Vaya... %i monedas!!!",objeto->oro);
+							outnl(1);
+							opsi->oro+=objeto->oro;
+						};
+						if(objeto->oro==0 || psi!=idjugador) objins(psi,objeto->id);
 						if(juin(psi,localidad->id)) {
 							out("%s coge %s...",opsi->nombre,nombre_objeto);
 							outnl(1);
@@ -1126,41 +1135,48 @@ bool psiata(u1 psi,char* np) {
 		Objeto* riv=objget(objvisnom(psi,np));
 		if(riv) {
 			if(riv->tipo==PSI) {
-				if(ojug==opsi) {
-					out("Atacas a %s",riv->nombre);
-					outnl(1);
-				} else if(riv==ojug) {
-					out("%s te ataca",opsi->nombre);
-					outnl(1);
-				} else if(jugloc==psiloc) {
-					out("%s ataca a %s",opsi->nombre,riv->nombre);
-					outnl(1);
-				}
-				if(riv->amigo) {
+				if(!riv->muerto) {
 					if(ojug==opsi) {
-						out("%s era amigo tuyo...",riv->nombre);
+						out("Atacas a %s",riv->nombre);
 						outnl(1);
-						riv->amigo=false;
-					}
-				}
-				int difer=atatot(opsi)-atatot(riv);
-				if(difer>0) {
-					if(jugloc==psiloc) {
-						out("El golpe es bueno...");
+					} else if(riv==ojug) {
+						out("%s te ataca",opsi->nombre);
+						outnl(1);
+					} else if(jugloc==psiloc) {
+						out("%s ataca a %s",opsi->nombre,riv->nombre);
 						outnl(1);
 					}
-					if(riv->vida<difer) {
-						psimat(riv->id);
+					if(riv->amigo) {
+						if(ojug==opsi) {
+							out("%s era amigo tuyo...",riv->nombre);
+							outnl(1);
+							riv->amigo=false;
+						}
+					}
+					int difer=atatot(opsi)-atatot(riv);
+					if(difer>0) {
+						if(jugloc==psiloc) {
+							out("El golpe es bueno...");
+							outnl(1);
+						}
+						if(riv->vida<difer) {
+							psimat(riv->id);
+						} else {
+							riv->vida-=difer;
+						}
 					} else {
-						riv->vida-=difer;
+						if(jugloc==psiloc) {
+							out("El golpe es malo...");
+							outnl(1);
+						}
 					}
+					return true;
 				} else {
-					if(jugloc==psiloc) {
-						out("El golpe es malo...");
+					if(opsi==ojug) {
+						out("No tiene sentido atacar a cadaveres...");
 						outnl(1);
 					}
 				}
-				return true;
 			} else {
 				if(opsi==ojug) {
 					out("No puedes atacar a %s...",riv->nombre);
@@ -1364,8 +1380,14 @@ bool psistt(u1 psi) {
 	};
 	Objeto* opsi=objget(psi);
 	if(opsi && opsi->jugador) {
-		out("%s, tus caracteristicas son AT:%i y HB:%i. Llevas %i objetos de %i posibles.",opsi->nombre,opsi->ataque,opsi->destreza,opsi->contenido.size,opsi->capacidad);
+		out("%s, tus caracteristicas son AT:%i y HB:%i.",opsi->nombre,opsi->ataque,opsi->destreza);
 		outnl(1);
+		out("Llevas %i objetos de %i posibles.",opsi->contenido.size,opsi->capacidad);
+		outnl(1);
+		if(opsi->oro) {
+			out("Tienes %i monedas.",opsi->oro);
+			outnl(1);
+		}
 		u1 v=opsi->vida;
 		u1 c=(v<2)?0:(v<4)?1:(v<6)?2:(v<8)?3:4;
 		out("Tu estado de salud es %s.",svida[c]);
@@ -1374,9 +1396,39 @@ bool psistt(u1 psi) {
 	return false;
 }
 
-bool psiact(u1 psi) {
+bool psihlp(u1 psi) {
+	if(psi==idjugador) {
+		out("Las acciones disponibles son: ");
+		outnl(1);
+		for(u1 k=ANORTE;k<=AFINALIZAR;k++) {
+			Accion a=acciones[k];
+			Cadena c;
+			cadcap(c,a.verbo[0]);
+			out("%s ",c);
+		}
+		outnl(1);
+	}
+	return false;
+}
+
+bool psimir(u1 psi) {
+	if(psi==idjugador) {
+		out("Miro...");
+		outnl(1);
+		visscr();
+	}
+	return false;
+}
+			
+bool psicanact(u1 psi) {
+	const int MAXVID=10;
 	Objeto* opsi=objget(psi);
-	if(opsi && opsi->tipo==PSI && !opsi->muerto && opsi->ia) {
+	return (opsi && opsi->tipo==PSI && !opsi->muerto && rnd(0,MAXVID)<opsi->vida);
+}
+
+bool psiact(u1 psi) {
+	if(psicanact(psi)) {
+		Objeto* opsi=objget(psi);
 		if(!opsi->ia(psi)) return psinot(psi);
 	}
 	return false;
@@ -1692,8 +1744,13 @@ static bool actsep(Token tok) {
 				return psiusa(idjugador,tok.complemento[0],tok.complemento[1]);
 			case ASTATUS:
 				return psistt(idjugador);
+			case AHELP:
+				return psihlp(idjugador);
+			case AMIRAR:
+				return psimir(idjugador);
 			case AFINALIZAR:
 				finset(FINQUIT);
+				return true;
 			default:
 				return atncene();
 		}
@@ -1728,6 +1785,10 @@ static bool actsep(Token tok) {
 			return psiusa(idjugador,tok.complemento[0],tok.complemento[1]);
 		case ASTATUS:
 			return psistt(idjugador);
+		case AHELP:
+			return psihlp(idjugador);
+		case AMIRAR:
+			return psimir(idjugador);
 		case AFINALIZAR:
 			finset(FINQUIT);
 			return true;
@@ -1742,9 +1803,19 @@ static void jugvis() {
 	if(oloc) oloc->visitado=true;
 }
 
+static bool jugrep(Token* t) {
+	//analiza si la entrada es la accion repeticion y la sustituye por el token anterior
+	if(t->orden==AREPETIR) {
+		*t=lsttok;
+		return true;
+	}
+	lsttok=*t;
+	return false;
+}
+
 bool jugact() {
 	bool ok=false;
-	if(ojugador && !ojugador->muerto) {
+	if(psicanact(idjugador)) {
 		jugvis();
 		while(!ok) {
 			out("Que quieres hacer? ");
@@ -1758,7 +1829,7 @@ bool jugact() {
 					for(u1 k=0;k<tokens-1;k++) {
 						cadcpy(tok.complemento[k],token[k+1]);
 					}
-					lsttok=tok;
+					jugrep(&tok);
 					if(evachk()) { //chequeo de eventos antes
 						if((ok=actsep(tok))) {
 							evdchk(); //chequeo de eventos despues
@@ -1836,6 +1907,7 @@ void visscr() {
 	u1 njugloc=0;
 	if(!jug->muerto && (njugloc=jug->contenedor)) {
 		Objeto* jugloc=objget(njugloc);
+		outnl(2);
 		outat(INVERSE);
 		out("%-70s TURNO %03i",jugloc->nombre,turno);
 		outat(NORMAL);

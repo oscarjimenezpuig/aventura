@@ -2,7 +2,7 @@
 ============================================================
   Fichero: aventura.h
   Creado: 07-04-2025
-  Ultima Modificacion: divendres, 11 d’abril de 2025, 11:17:00
+  Ultima Modificacion: dilluns, 14 d’abril de 2025, 07:22:58
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -52,7 +52,10 @@
 #define ANADA 16
 #define AEXAMINAR 17
 #define ASTATUS 18
-#define AFINALIZAR 19
+#define AREPETIR 19
+#define AHELP 20
+#define AMIRAR 21
+#define AFINALIZAR 22
 
 //finales
 #define FINQUIT 0 //final cuando se conecta quit
@@ -88,6 +91,7 @@ typedef struct {
 	Cadena descripcion;
 	u1 contenedor;
 	Array contenido;
+	int oro;
 	union {
 		struct { //localidad
 			u1 salida[SALIDAS];
@@ -101,7 +105,7 @@ typedef struct {
 		struct { //item
 			bool cogible;
 			bool cerrada; //si es cerrada, actua como caja
-			u1 plus;
+			u1 plus; //si tiene plus, actua como arma
 		};
 		
 	};
@@ -131,25 +135,55 @@ void out(const char* cadena,...);
 //impresion formateada
 
 void outnl(u1 lines);
-// nueva linea */
+// nueva linea
 
 void outtb(u1 tab);
-// tabulacion, a base de espacios */
+// tabulacion, a base de espacios
 
 void outat(Atributo a);
-// attributos de escritura */
+// attributos de escritura
 
 void cadcpy(Cadena d,char* o);
-// copia un string en una cadena */
+// copia un string en una cadena
 
 bool cadequ(char* a,char* b,bool insensitive);
-// mira si dos cadenas son iguales insensitive=true: case insensitive*/
+// mira si dos cadenas son iguales insensitive=true: case insensitive
 
 u1 cadlen(char* c);
-// da la longitud de la cadena */
+// da la longitud de la cadena
 
 void cadadd(Cadena d,char* a);
-//añade a la cadena d, la cadena a.
+//añade a la cadena d, la cadena a
+
+void cadcap(Cadena d,char* a);
+//pone en mayusculas la cadena a
+
+Array arrnew();
+//nuevo array de enteros
+
+u1 arrsiz(Array array);
+//dar el tamaño del array
+
+u1 arrget(Array array,u1 pos);
+//conseguir el valor de una posicion
+
+void arrclr(Array* array);
+//limpiar el array a cero
+
+bool arrpsh(Array* array,u1 value);
+//introducir en la cola un valor
+
+bool arrins(Array* array,u1 size,u1* values);
+//instertar un array de valores
+
+bool arrfnd(Array array,u1 value,u1* pos);
+//buscar un valor
+
+void arrera(Array* array,u1 pos);
+//borrar una posicion
+
+void arrprt(Array array);
+//imprimir todos los valores del array
 
 void flgon(u1 flag);
 //cpmecta bandera
@@ -193,7 +227,7 @@ bool locnew(u1 id,char* nombre,char* descripcion);
 bool loccon(u1 origen,u1 destino,u1 salida,bool bidireccional);
 //conecta dos localidades por una salida (bidireccional si hay que hacerlo en las dos direcciones)
 
-bool itmnew(u1 id,char* nombre,char* descripcion,bool cogible,bool cerrada,u1 plus);
+bool itmnew(u1 id,char* nombre,char* descripcion,bool cogible,bool cerrada,u1 plus,int oro);
 //definimos un item nuevo
 
 bool psinew(u1 id,char* nombre,char* descripcion,bool jugador,bool amigo,u1 ataque,u1 destreza,u1 capacidad,IA ia);
@@ -250,13 +284,23 @@ void visscr();
 #define Equal cadequ
 #define Len cadlen
 #define Add cadadd
+#define Capital cadcap
+#define Bytes arrnew()
+#define Size arrsiz
+#define Get arrget
+#define Clear arrclr
+#define Push arrpsh
+#define Insert arrins
+#define Find arrfnd
+#define Erase arrera
+#define Print arrprt
 #define On flgon
 #define Off floff
 #define Not flgnot
 #define Ison flgion
-#define Get objget
-#define Insert objins
-#define Expulse objexp
+#define Object objget
+#define Place objins
+#define Unplace objexp
 #define Use evunew
 #define Before evanew
 #define After evdnew
@@ -267,9 +311,9 @@ void visscr();
 #define Item itmnew
 #define Npi psinew
 #define Npiact pssact()
-#define IAhuman
-#define IAanimal
-#define IAPlant
+#define IAhuman IAhum
+#define IAanimal IAani
+#define IAplant IApln
 #define Player jugnew
 #define Playeract jugact()
 #define Torninc trnpss()

@@ -2,7 +2,7 @@
 ============================================================
   Fichero: juego.c
   Creado: 20-03-2025
-  Ultima Modificacion: divendres, 11 d’abril de 2025, 11:24:12
+  Ultima Modificacion: dilluns, 14 d’abril de 2025, 07:31:01
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -22,26 +22,29 @@ static void mapa_inicia() {
 #define PAN ITMID
 #define ESCUDO (PAN+1)
 #define CAJA (ESCUDO+1)
+#define COFRE (CAJA+1)
 
 static void items_inicia() {
-	if(itmnew(CAJA,"Caja","de carton viejo...",true,false,0)) {
+	if(itmnew(CAJA,"Caja","de carton viejo...",true,false,0,0)) {
 		objins(rnd(1,27),CAJA);
 	}
-	if(itmnew(PAN,"Pan","deliciosa y crujiente",true,false,0)) {
+	if(itmnew(PAN,"Pan","deliciosa y crujiente",true,false,0,0)) {
 		objins(CAJA,PAN);
 	}
-	itmnew(ESCUDO,"Escudo","un escudo antiguo y duradero",true,false,5);
+	if(itmnew(ESCUDO,"Escudo","un escudo antiguo y duradero",true,false,5,0)) {
+		objins(rnd(1,27),ESCUDO);
+	}
+	if(itmnew(COFRE,"Cofre","antiguo cofre lleno de monedas",true,false,0,1000)) {
+		objins(1,COFRE);
+	}
 }
 
-#define TALON PSIID
-#define OGRO (TALON+1)
+#define NUPETSID PSIID
+#define NUPETSDIM 20
 
 static void npis_inicia() {
-	psinew(TALON,"Talon","guapo y bello",false,true,5,3,1,IAhum);
-	objins(rnd(1,27),TALON);
-	objins(TALON,ESCUDO);
-	psinew(OGRO,"Ogro","muy feo y con mocos",false,false,7,7,3,IAhum);
-	objins(rnd(10,27),OGRO);
+	Raza nuppets={NUPETSID,{NULL,{4,8}},"gomoso y aberrante",false,{1,4},{1,4},{1,4},IAhum,{true}};
+	Race(nuppets,NUPETSDIM);
 }
 
 #define USAPAN 0

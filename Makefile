@@ -82,6 +82,6 @@ check:
 #MAKEFILE VARIABLE
 
 NAME = aventura 
-SCRS =aventura.c avadds.c juego.c#aventura.c juego.c
+SCRS = aventura.c avadds.c juego.c
 INCLUDES = 
 
