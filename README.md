@@ -7,4 +7,4 @@
 2/4/25 Acabar la funcion visible (objetos en la localidad, contenidos en uno mismo y en objetos no cerrados) (Resuelto)
 10/4/25 Unificados todos los archivos. Pendientes de eliminacion los separados y de finalizar addons. (Resuelto)
 11/4/25 Programar la lentitud de los heridos (aleatoria). Pensar la programacion del disparo. (Resuelto)
-14/4/25 Programar la compra de cualidades y el precio de cada una de ellas. Tener en cuenta maximo 12 puntos.
+14/4/25 Programar la compra de cualidades y el precio de cada una de ellas. Tener en cuenta maximo 12 puntos. (Resuelto)
