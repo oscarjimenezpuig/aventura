@@ -2,7 +2,7 @@
 ============================================================
   Fichero: aventura.c
   Creado: 07-04-2025
-  Ultima Modificacion: dilluns, 14 d’abril de 2025, 07:31:19
+  Ultima Modificacion: dimarts, 22 d’abril de 2025, 12:16:30
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -25,6 +25,7 @@
 #define EAN 1 //eventos antes (array)
 #define EDS 2 //eventos despues (array)
 #define TERMW 80 //numero de columnas de la terminal
+#define INTPRC 100 //precio inicial de cualquier cualidad
 
 // TIPOS
 
@@ -54,6 +55,9 @@ static int turno=1;
 static u1 finval=0;
 static bool finis=false;
 static bool aquienemigo=false;
+static int prcataque=INTPRC;
+static int prcdestreza=INTPRC;
+static int prccapacidad=INTPRC;
 
 // PROTOTIPOS FUNCION
 
@@ -135,6 +139,9 @@ bool psihlp(u1 psi);
 
 bool psimir(u1 psi);
 //mirar, repite la descripcion de la pantalla (solo para personaje jugador)
+
+bool psimej(u1 psi);
+//mejorar, sale un menu con las disponibilidades para mejorar
 
 bool psicanact(u1 psi);
 //da el resultado de si un psi cualquiera puede actuar en un turno determinado
@@ -789,7 +796,8 @@ static void accdef() {
 	accins(19,"rep");
 	accins(20,"ayuda");
 	accins(21,"mirar");
-	accins(22,"fin");
+	accins(22,"mejorar");
+	accins(23,"fin");
 }
 
 u1 accfnd(char* a) {
@@ -1419,7 +1427,56 @@ bool psimir(u1 psi) {
 	}
 	return false;
 }
-			
+
+bool psimej(u1 psi) {
+	Objeto* oj=objget(psi);
+	bool retorno=false;
+	if(oj && oj==ojugador) {
+		u1* valor[]={&(oj->ataque),&(oj->destreza),&(oj->capacidad)};
+		int* precio[]={&prcataque,&prcdestreza,&prccapacidad};
+		char* nombre[]={"ATAQUE","DESTREZA","CAPACIDAD"};
+		int* oro=&oj->oro;
+		out("Precio en monedas de oro por habilidad:");
+		outnl(1);
+		for(u1 k=0;k<3;k++) {
+			out("%i. %s: %i monedas ",k+1,nombre[k],*precio[k]);
+			if(*valor[k]==MAXFEAT) out("(No mejorable)");
+			outnl(1);
+		}
+		int enter=0;
+		do {
+			Cadena etd;
+			out("Introduce caracteristica a mejorar: ");
+			in(etd);
+			if(cadlen(etd)==1) {
+				enter=(etd[0]-'0');
+				if(enter<0 || enter>3) enter=4;
+			} else enter=4;
+		}while(enter==4);
+		if(enter==0) {
+			out("No mejoras ninguna habilidad.");
+			outnl(1);
+		} else {
+			--enter;
+			if(*oro>=*precio[enter]) {
+				if(*valor[enter]<MAXFEAT) {
+					(*valor[enter])++;
+					*oro-=*precio[enter];
+					(*precio[enter])*=2;
+					retorno=true;
+					out("Habilidad mejorada...");
+				} else {
+					out("Esta habilidad ya esta al maximo...");
+				}
+			} else {
+				out("No tienes suficientes monedas para mejorar la habilidad");
+			}
+			outnl(1);
+		}
+	}
+	return retorno;
+}
+					
 bool psicanact(u1 psi) {
 	const int MAXVID=10;
 	Objeto* opsi=objget(psi);
@@ -1789,6 +1846,8 @@ static bool actsep(Token tok) {
 			return psihlp(idjugador);
 		case AMIRAR:
 			return psimir(idjugador);
+		case AMEJORAR:
+			return psimej(idjugador);
 		case AFINALIZAR:
 			finset(FINQUIT);
 			return true;

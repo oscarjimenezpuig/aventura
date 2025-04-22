@@ -2,7 +2,7 @@
 ============================================================
   Fichero: aventura.h
   Creado: 07-04-2025
-  Ultima Modificacion: dilluns, 14 d’abril de 2025, 07:22:58
+  Ultima Modificacion: dimarts, 22 d’abril de 2025, 11:43:29
   oSCAR jIMENEZ pUIG                                       
 ============================================================
 */
@@ -55,7 +55,8 @@
 #define AREPETIR 19
 #define AHELP 20
 #define AMIRAR 21
-#define AFINALIZAR 22
+#define AMEJORAR 22
+#define AFINALIZAR 23
 
 //finales
 #define FINQUIT 0 //final cuando se conecta quit
