@@ -8,3 +8,5 @@
 10/4/25 Unificados todos los archivos. Pendientes de eliminacion los separados y de finalizar addons. (Resuelto)
 11/4/25 Programar la lentitud de los heridos (aleatoria). Pensar la programacion del disparo. (Resuelto)
 14/4/25 Programar la compra de cualidades y el precio de cada una de ellas. Tener en cuenta maximo 12 puntos. (Resuelto)
+
+No finalizado
